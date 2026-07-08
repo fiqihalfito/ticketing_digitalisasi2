@@ -1,0 +1,14 @@
+{
+  // 1. Pengaturan khusus untuk file di dalam folder FRONTEND
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // 2. Pengaturan khusus untuk file TypeScript BACKEND
+  // (Karena Prettier biasanya otomatis mengambil alih TS, kita paksa extension TS bawaan khusus untuk backend)
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  }
+}
