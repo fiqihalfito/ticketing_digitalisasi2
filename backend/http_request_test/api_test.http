@@ -1,0 +1,20 @@
+
+@baseurl = http://localhost:3000
+
+### Mengambil data user dari GitHub
+GET {{baseurl}}/subbidang
+
+### redirect to elysia
+GET {{baseurl}}/toElysia
+
+### tes post body
+POST {{baseurl}}/user
+Content-Type: application/json
+
+{
+    "name": "Fiqh",
+    "age": 12
+}
+
+### profile cookie
+GET {{baseurl}}/profile

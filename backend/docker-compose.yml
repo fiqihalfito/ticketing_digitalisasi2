@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  ticketing_digitalisasi2-db:
+    image: postgres:18.4
+    # image: docker.io/library/postgres:18.4
+    container_name: ticketing_digitalisasi2-db-container
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: fiqih
+      POSTGRES_PASSWORD: fiqih
+      POSTGRES_DB: ticketing_digitalisasi2
+      TZ: Asia/Jakarta
+
+    ports:
+      - "7878:5432"
+
+    volumes:
+      - ticketing_digitalisasi2:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fiqih -d ticketing_digitalisasi2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+  minio:
+      image: minio/minio:latest
+      # image: docker.io/minio/minio:latest
+      container_name: ticketing_digitalisasi2_minio
+      ports:
+          - "9001:9000" # S3 API
+          - "9091:9090" # Console (UI)
+      environment:
+          MINIO_ROOT_USER: ticketing_digitalisasi2 # Ganti dengan user aman
+          MINIO_ROOT_PASSWORD: ticketing_digitalisasi2 # Ganti dengan password aman
+      command: server /data --console-address ":9090"
+      volumes:
+          # Path kalau script compose ada di windows host
+          # - C:/Users/fiqih/Documents/Coding/minio/minio-ticketing_digitalisasi2:/data
+          # Path kalau script berada di wsl2
+        - /mnt/c/Users/fiqih/Documents/Coding/minio/minio-ticketing_digitalisasi2:/data
+      # - ./storage/minio_data:/data
+      # - ./storage/pdfs:/data/pdfs # opsional: mount folder host untuk PDF
+      restart: unless-stopped
+  
+
+volumes:
+  ticketing_digitalisasi2:
