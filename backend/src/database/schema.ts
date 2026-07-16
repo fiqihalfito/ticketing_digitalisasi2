@@ -1,8 +1,7 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { char, integer, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
-export const usersTable = pgTable("users", {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    name: varchar().notNull(),
-    age: integer().notNull(),
-    email: varchar().notNull().unique(),
+export const subfieldsTable = pgTable("subfields", {
+    subfield_id: uuid().primaryKey().default(sql`uuidv7()`),
+    name: varchar({ length: 50 }).notNull(),
 });
