@@ -1,7 +1,9 @@
 import Elysia from "elysia";
+import { Subfield } from "./service";
 
 
 export const subfield = new Elysia({ prefix: '/subfield' })
     .get('/', async () => {
-        return "all subbidangs"
+        const allSubfields = await Subfield.getAll()
+        return allSubfields
     })
