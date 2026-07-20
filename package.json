@@ -1,0 +1,11 @@
+{
+    "name": "ticketing-digitalisasi2-monorepo",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend"
+    ],
+    "scripts": {
+        "dev": "podman compose -f backend/docker-compose.yml up -d && bun run --filter '*' dev"
+    }
+}
