@@ -7,6 +7,7 @@
     "db:dev:push": "bunx --bun drizzle-kit push"
   },
   "dependencies": {
+    "@elysia/cors": "^1.4.2",
     "@elysia/openapi": "^1.4.15",
     "better-auth": "^1.6.23",
     "dotenv": "^17.4.2",

@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/bun-sql';
 import { SQL } from "bun"
+import { relations } from './relations';
 
 const client = new SQL({
     url: Bun.env.DATABASE_URL!,
@@ -10,6 +11,6 @@ const client = new SQL({
 
 export const db = drizzle({
     client: client,
-    // relations: relations,
+    relations: relations,
     // logger: true
 });
