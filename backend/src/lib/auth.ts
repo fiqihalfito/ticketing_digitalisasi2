@@ -28,9 +28,6 @@ export const auth = betterAuth({
     },
     account: {
         modelName: "accountsTable",
-        // fields: {
-        //     accountId: "accountCredentialId", // your renamed field
-        // },
     },
     verification: {
         modelName: "verificationsTable",
