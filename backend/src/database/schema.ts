@@ -7,18 +7,24 @@ export const subfieldsTable = pgTable("subfields", {
 });
 
 export const usersTable = pgTable("users", {
-    userId: text("user_id").primaryKey(),
+    id: text("user_id").primaryKey(),
     name: text("name").notNull(),
     email: varchar("email", { length: 255 }).notNull().unique(),
     emailVerified: boolean("email_verified").notNull(),
     image: text("image"),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
     updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
+
+    // admin plugin fields
+    role: text("role"),
+    banned: boolean("banned").default(false),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires", { precision: 6, withTimezone: true }),
 });
 
 export const sessionsTable = pgTable("sessions", {
-    sessionId: text("session_id").primaryKey(),
-    userId: text("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
+    id: text("session_id").primaryKey(),
+    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     token: varchar("token", { length: 255 }).notNull().unique(),
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
     ipAddress: text("ip_address"),
@@ -28,9 +34,10 @@ export const sessionsTable = pgTable("sessions", {
 });
 
 export const accountsTable = pgTable("accounts", {
-    accountId: text("account_id").primaryKey(),
-    userId: text("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
-    accountCredentialId: text("account_credential_id").notNull(),
+    id: text("account_id").primaryKey(),
+    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    issuer: text("issuer").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
     providerId: text("provider_id").notNull(),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
@@ -44,7 +51,7 @@ export const accountsTable = pgTable("accounts", {
 });
 
 export const verificationsTable = pgTable("verifications", {
-    verificationId: text("verification_id").primaryKey(),
+    id: text("verification_id").primaryKey(),
     identifier: text("identifier").notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),

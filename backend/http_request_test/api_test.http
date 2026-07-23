@@ -18,3 +18,16 @@ Content-Type: application/json
 
 ### profile cookie
 GET {{baseurl}}/profile
+
+### sign up new user or account
+POST {{baseurl}}/api/auth/sign-up/email
+Content-Type: application/json
+
+{
+    "name": "Admin Apotek",
+    "email": "fiqihalfito.dev@gmail.com",
+    "password": "123456"
+}
+
+### health check
+GET {{baseurl}}/api/auth/ok

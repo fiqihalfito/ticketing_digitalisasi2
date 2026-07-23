@@ -7,9 +7,10 @@
     "db:dev:push": "bunx --bun drizzle-kit push"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.0-rc.2",
     "@elysia/cors": "^1.4.2",
     "@elysia/openapi": "^1.4.15",
-    "better-auth": "^1.6.23",
+    "better-auth": "^1.7.0-rc.2",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^1.0.0-rc.4",
     "drizzle-typebox": "^0.3.3",

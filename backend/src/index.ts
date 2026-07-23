@@ -3,7 +3,8 @@ import openapi from "@elysia/openapi";
 import { cors } from '@elysia/cors'
 import { subfield } from "./modules/subfield";
 import { auth } from "./lib/auth";
-import { OpenAPI } from "./lib/openAPI";
+import { OpenAPI } from "./lib/openAPI-auth";
+import { betterAuth } from "./modules/auth/middleware/better-auth";
 
 // const user = new Elysia()
 //   .onError(({ code, status }) => {
@@ -27,12 +28,12 @@ import { OpenAPI } from "./lib/openAPI";
 
 
 const app = new Elysia()
-  .mount(auth.handler)
+  .use(betterAuth)
   .use(subfield)
   .use(openapi({
     documentation: {
       components: await OpenAPI.components,
-      paths: await OpenAPI.getPaths()
+      paths: await OpenAPI.getPaths(),
     }
   }))
   .listen(3000);

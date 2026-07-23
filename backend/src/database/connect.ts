@@ -12,5 +12,6 @@ const client = new SQL({
 export const db = drizzle({
     client: client,
     relations: relations,
+
     // logger: true
 });

@@ -9,13 +9,13 @@ export const relations = defineRelations(schema, (r) => ({
     sessionsTable: {
         users: r.one.usersTable({
             from: r.sessionsTable.userId,
-            to: r.usersTable.userId
+            to: r.usersTable.id
         })
     },
     accountsTable: {
         users: r.one.usersTable({
             from: r.accountsTable.userId,
-            to: r.usersTable.userId
+            to: r.usersTable.id
         })
     }
 }))

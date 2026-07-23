@@ -1,14 +1,16 @@
 import { db } from "@/database/connect";
 import { betterAuth } from "better-auth/minimal";
-import { openAPI } from 'better-auth/plugins'
+import { admin, openAPI } from 'better-auth/plugins'
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import * as schema from "../database/schema";
+import * as schema from "@/database/schema";
 
 export const auth = betterAuth({
+    basePath: '/api',
+    trustedOrigins: ["http://localhost:3000"],
     database: drizzleAdapter(db, {
         provider: "pg", // or "mysql", "sqlite"
         schema,
-        usePlural: true,
+        // usePlural: true,
 
         // schema: {
         //     ...schema,
@@ -19,19 +21,19 @@ export const auth = betterAuth({
         // }
     }),
     user: {
-        modelName: "users",
+        modelName: "usersTable",
     },
     session: {
-        modelName: "sessions",
+        modelName: "sessionsTable",
     },
     account: {
-        modelName: "accounts",
+        modelName: "accountsTable",
         fields: {
-            accountId: "account_credential_id"
-        }
+            accountId: "accountCredentialId", // your renamed field
+        },
     },
     verification: {
-        modelName: "verifications"
+        modelName: "verificationsTable",
     },
     experimental: {
         joins: true
@@ -39,5 +41,12 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true
     },
-    plugins: [openAPI()]
+    plugins: [
+        openAPI(),
+        admin()
+    ]
 });
+
+// Export type untuk TypeScript
+export type Session = typeof auth.$Infer.Session
+export type User = typeof auth.$Infer.Session.user
