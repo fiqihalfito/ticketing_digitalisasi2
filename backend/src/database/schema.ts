@@ -29,6 +29,7 @@ export const sessionsTable = pgTable("sessions", {
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
+    impersonatedBy: text("impersonated_by"),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
     updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
 });
