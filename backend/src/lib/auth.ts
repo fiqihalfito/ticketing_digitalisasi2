@@ -1,7 +1,8 @@
 import { db } from "@/database/connect";
 import { betterAuth } from "better-auth/minimal";
 import { admin, openAPI } from 'better-auth/plugins'
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+// import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import * as schema from "@/database/schema";
 
 export const auth = betterAuth({
@@ -32,9 +33,9 @@ export const auth = betterAuth({
     verification: {
         modelName: "verificationsTable",
     },
-    experimental: {
-        joins: true
-    },
+    // experimental: {
+    //     joins: true
+    // },
     emailAndPassword: {
         enabled: true
     },

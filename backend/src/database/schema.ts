@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, char, integer, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, char, index, integer, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const subfieldsTable = pgTable("subfields", {
     subfieldId: uuid("subfield_id").primaryKey().default(sql`uuidv7()`),
@@ -9,11 +9,11 @@ export const subfieldsTable = pgTable("subfields", {
 export const usersTable = pgTable("users", {
     id: text("user_id").primaryKey(),
     name: text("name").notNull(),
-    email: varchar("email", { length: 255 }).notNull().unique(),
-    emailVerified: boolean("email_verified").notNull(),
+    email: varchar("email").notNull().unique(),
+    emailVerified: boolean("email_verified").default(false).notNull(),
     image: text("image"),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
-    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).$onUpdate(() => new Date()).notNull(),
 
     // admin plugin fields
     role: text("role"),
@@ -25,14 +25,16 @@ export const usersTable = pgTable("users", {
 export const sessionsTable = pgTable("sessions", {
     id: text("session_id").primaryKey(),
     userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    token: varchar("token", { length: 255 }).notNull().unique(),
+    token: varchar("token").notNull().unique(),
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
     impersonatedBy: text("impersonated_by"),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
-    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
-});
+    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).$onUpdate(() => new Date()).notNull(),
+},
+    (table) => [index("sessionsTable_userId_idx").on(table.userId)]
+);
 
 export const accountsTable = pgTable("accounts", {
     id: text("account_id").primaryKey(),
@@ -48,8 +50,16 @@ export const accountsTable = pgTable("accounts", {
     idToken: text("id_token"),
     password: text("password"),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
-    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
-});
+    updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).$onUpdate(() => new Date()).notNull(),
+},
+    (table) => [
+        uniqueIndex("accountsTable_issuer_providerAccountId_uidx").on(
+            table.issuer,
+            table.providerAccountId,
+        ),
+        index("accountsTable_userId_idx").on(table.userId),
+    ],
+);
 
 export const verificationsTable = pgTable("verifications", {
     id: text("verification_id").primaryKey(),
@@ -58,4 +68,8 @@ export const verificationsTable = pgTable("verifications", {
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
     updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
-});
+},
+    (table) => [
+        index("verificationsTable_identifier_idx").on(table.identifier)
+    ],
+);

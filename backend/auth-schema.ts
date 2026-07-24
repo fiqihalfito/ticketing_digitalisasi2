@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { defineRelationsPart } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -8,7 +8,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
+export const usersTable = pgTable("users_table", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -24,8 +24,8 @@ export const user = pgTable("user", {
   banExpires: timestamp("ban_expires"),
 });
 
-export const session = pgTable(
-  "session",
+export const sessionsTable = pgTable(
+  "sessions_table",
   {
     id: text("id").primaryKey(),
     expiresAt: timestamp("expires_at").notNull(),
@@ -38,14 +38,14 @@ export const session = pgTable(
     userAgent: text("user_agent"),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => usersTable.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
   },
-  (table) => [index("session_userId_idx").on(table.userId)],
+  (table) => [index("sessionsTable_userId_idx").on(table.userId)],
 );
 
-export const account = pgTable(
-  "account",
+export const accountsTable = pgTable(
+  "accounts_table",
   {
     id: text("id").primaryKey(),
     issuer: text("issuer").notNull(),
@@ -53,7 +53,7 @@ export const account = pgTable(
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => usersTable.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
@@ -67,16 +67,16 @@ export const account = pgTable(
       .notNull(),
   },
   (table) => [
-    uniqueIndex("account_issuer_providerAccountId_uidx").on(
+    uniqueIndex("accountsTable_issuer_providerAccountId_uidx").on(
       table.issuer,
       table.providerAccountId,
     ),
-    index("account_userId_idx").on(table.userId),
+    index("accountsTable_userId_idx").on(table.userId),
   ],
 );
 
-export const verification = pgTable(
-  "verification",
+export const verificationsTable = pgTable(
+  "verifications_table",
   {
     id: text("id").primaryKey(),
     identifier: text("identifier").notNull(),
@@ -87,24 +87,33 @@ export const verification = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)],
+  (table) => [index("verificationsTable_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-}));
-
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
+export const authRelations = defineRelationsPart(
+  { usersTable, sessionsTable, accountsTable, verificationsTable },
+  (r) => ({
+    usersTable: {
+      sessionsTables: r.many.sessionsTable({
+        from: r.usersTable.id,
+        to: r.sessionsTable.userId,
+      }),
+      accountsTables: r.many.accountsTable({
+        from: r.usersTable.id,
+        to: r.accountsTable.userId,
+      }),
+    },
+    sessionsTable: {
+      usersTable: r.one.usersTable({
+        from: r.sessionsTable.userId,
+        to: r.usersTable.id,
+      }),
+    },
+    accountsTable: {
+      usersTable: r.one.usersTable({
+        from: r.accountsTable.userId,
+        to: r.usersTable.id,
+      }),
+    },
   }),
-}));
-
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
-  }),
-}));
+);

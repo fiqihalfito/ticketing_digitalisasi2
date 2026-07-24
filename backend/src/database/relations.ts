@@ -3,8 +3,14 @@ import * as schema from "./schema"
 
 export const relations = defineRelations(schema, (r) => ({
     usersTable: {
-        sessions: r.many.sessionsTable(),
-        accounts: r.many.accountsTable()
+        sessions: r.many.sessionsTable({
+            from: r.usersTable.id,
+            to: r.sessionsTable.userId
+        }),
+        accounts: r.many.accountsTable({
+            from: r.usersTable.id,
+            to: r.accountsTable.userId,
+        })
     },
     sessionsTable: {
         users: r.one.usersTable({
