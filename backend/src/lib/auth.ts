@@ -33,9 +33,9 @@ export const auth = betterAuth({
     verification: {
         modelName: "verificationsTable",
     },
-    // experimental: {
-    //     joins: true
-    // },
+    experimental: {
+        joins: true
+    },
     emailAndPassword: {
         enabled: true
     },
