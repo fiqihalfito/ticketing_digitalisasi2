@@ -10,6 +10,7 @@
     "@better-auth/drizzle-adapter": "^1.7.0-rc.2",
     "@elysia/cors": "^1.4.2",
     "@elysia/openapi": "^1.4.15",
+    "@sinclair/typebox": "0.34.13",
     "better-auth": "^1.7.0-rc.2",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^1.0.0-rc.4",
@@ -22,6 +23,6 @@
   },
   "module": "src/index.js",
   "overrides": {
-    "@sinclair/typebox": ">= 0.34.0 < 1"
+    "@sinclair/typebox": "0.34.13"
   }
 }

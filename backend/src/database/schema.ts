@@ -22,6 +22,7 @@ export const usersTable = pgTable("users", {
     banExpires: timestamp("ban_expires", { precision: 6, withTimezone: true }),
 });
 
+
 export const sessionsTable = pgTable("sessions", {
     id: text("session_id").primaryKey(),
     userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),

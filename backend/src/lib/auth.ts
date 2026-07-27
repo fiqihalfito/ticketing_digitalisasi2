@@ -26,6 +26,12 @@ export const auth = betterAuth({
     },
     session: {
         modelName: "sessionsTable",
+        expiresIn: 60 * 60 * 24 * 7,    // 7 hari
+        updateAge: 60 * 60 * 24,         // Update setiap 24 jam
+        cookieCache: {
+            enabled: true,
+            maxAge: 60 * 5                  // Cache 5 menit
+        }
     },
     account: {
         modelName: "accountsTable",
@@ -39,9 +45,13 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true
     },
+
     plugins: [
         openAPI(),
-        admin()
+        admin({
+            defaultRole: "requester",
+            adminRoles: ["admin"]
+        })
     ]
 });
 
