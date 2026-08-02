@@ -25,4 +25,14 @@ export abstract class SubfieldService {
         return subfield
     }
 
+    static async getDropdown() {
+        const dropdown = await db.select({
+            subfieldId: subfieldsTable.subfieldId,
+            name: subfieldsTable.name
+        }).from(subfieldsTable)
+        return dropdown
+    }
+
+
+
 }
