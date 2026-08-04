@@ -17,25 +17,16 @@ const app = new Elysia()
   )
 
   .mount("/auth", auth.handler)
-  // .use(authMiddleware)
-
   .group('/api', app => app
     .use(subfield)
   )
-  // .get('/user', ({ user }) => user, {
-  //   auth: true
-  // })
   .get('/check-health', () => "ok")
   .use(openapi({
     documentation: {
       components: await OpenAPI.components,
       paths: await OpenAPI.getPaths()
     },
-    // references: fromTypes('src/index.ts', {
-    //   projectRoot: process.cwd(),
-    // })
   }))
-
   .listen(3000);
 
 console.log(
