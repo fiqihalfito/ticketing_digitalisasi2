@@ -2,10 +2,10 @@
     "name": "ticketing-digitalisasi2-monorepo",
     "private": true,
     "workspaces": [
-        "backend",
-        "frontend"
+        "apps/*",
+        "packages/*"
     ],
     "scripts": {
-        "dev": "podman compose -f backend/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
+        "dev": "podman compose -f apps/backend/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
     }
 }
