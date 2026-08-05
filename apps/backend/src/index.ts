@@ -16,7 +16,7 @@ const app = new Elysia()
     })
   )
 
-  .mount("/auth", auth.handler)
+              .mount("/auth", auth.handler)
   .group('/api', app => app
     .use(subfield)
   )
