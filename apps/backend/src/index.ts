@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import openapi, { fromTypes } from "@elysia/openapi";
+import openapi from "@elysia/openapi";
 import { cors } from '@elysia/cors'
 import { subfield } from "./modules/subfield";
 import { auth } from "./modules/auth/lib/auth";
@@ -16,7 +16,7 @@ const app = new Elysia()
     })
   )
 
-              .mount("/auth", auth.handler)
+  .mount("/auth", auth.handler)
   .group('/api', app => app
     .use(subfield)
   )

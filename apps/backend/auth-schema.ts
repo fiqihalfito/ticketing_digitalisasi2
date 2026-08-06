@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   boolean,
+  integer,
   index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -40,6 +41,8 @@ export const sessionsTable = pgTable(
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
+    activeOrganizationId: text("active_organization_id"),
+    activeTeamId: text("active_team_id"),
   },
   (table) => [index("sessionsTable_userId_idx").on(table.userId)],
 );
@@ -90,8 +93,107 @@ export const verificationsTable = pgTable(
   (table) => [index("verificationsTable_identifier_idx").on(table.identifier)],
 );
 
+export const organizationsTable = pgTable(
+  "organizations_table",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
+    logo: text("logo"),
+    createdAt: timestamp("created_at").notNull(),
+    metadata: text("metadata"),
+  },
+  (table) => [uniqueIndex("organizationsTable_slug_uidx").on(table.slug)],
+);
+
+export const teamsTable = pgTable(
+  "teams_table",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    memberCount: integer("member_count").default(0).notNull(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organizationsTable.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+  },
+  (table) => [index("teamsTable_organizationId_idx").on(table.organizationId)],
+);
+
+export const teamMembersTable = pgTable(
+  "team_members_table",
+  {
+    id: text("id").primaryKey(),
+    teamId: text("team_id")
+      .notNull()
+      .references(() => teamsTable.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    membershipKey: text("membership_key").unique(),
+    createdAt: timestamp("created_at"),
+  },
+  (table) => [
+    index("teamMembersTable_teamId_idx").on(table.teamId),
+    index("teamMembersTable_userId_idx").on(table.userId),
+  ],
+);
+
+export const membersTable = pgTable(
+  "members_table",
+  {
+    id: text("id").primaryKey(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organizationsTable.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    role: text("role").default("member").notNull(),
+    createdAt: timestamp("created_at").notNull(),
+  },
+  (table) => [
+    index("membersTable_organizationId_idx").on(table.organizationId),
+    index("membersTable_userId_idx").on(table.userId),
+  ],
+);
+
+export const invitationsTable = pgTable(
+  "invitations_table",
+  {
+    id: text("id").primaryKey(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organizationsTable.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    role: text("role"),
+    teamId: text("team_id"),
+    status: text("status").default("pending").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").notNull(),
+    inviterId: text("inviter_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    index("invitationsTable_organizationId_idx").on(table.organizationId),
+    index("invitationsTable_email_idx").on(table.email),
+  ],
+);
+
 export const authRelations = defineRelationsPart(
-  { usersTable, sessionsTable, accountsTable, verificationsTable },
+  {
+    usersTable,
+    sessionsTable,
+    accountsTable,
+    verificationsTable,
+    organizationsTable,
+    teamsTable,
+    teamMembersTable,
+    membersTable,
+    invitationsTable,
+  },
   (r) => ({
     usersTable: {
       sessionsTables: r.many.sessionsTable({
@@ -101,6 +203,18 @@ export const authRelations = defineRelationsPart(
       accountsTables: r.many.accountsTable({
         from: r.usersTable.id,
         to: r.accountsTable.userId,
+      }),
+      teamMembersTables: r.many.teamMembersTable({
+        from: r.usersTable.id,
+        to: r.teamMembersTable.userId,
+      }),
+      membersTables: r.many.membersTable({
+        from: r.usersTable.id,
+        to: r.membersTable.userId,
+      }),
+      invitationsTables: r.many.invitationsTable({
+        from: r.usersTable.id,
+        to: r.invitationsTable.inviterId,
       }),
     },
     sessionsTable: {
@@ -112,6 +226,60 @@ export const authRelations = defineRelationsPart(
     accountsTable: {
       usersTable: r.one.usersTable({
         from: r.accountsTable.userId,
+        to: r.usersTable.id,
+      }),
+    },
+    organizationsTable: {
+      teamsTables: r.many.teamsTable({
+        from: r.organizationsTable.id,
+        to: r.teamsTable.organizationId,
+      }),
+      membersTables: r.many.membersTable({
+        from: r.organizationsTable.id,
+        to: r.membersTable.organizationId,
+      }),
+      invitationsTables: r.many.invitationsTable({
+        from: r.organizationsTable.id,
+        to: r.invitationsTable.organizationId,
+      }),
+    },
+    teamsTable: {
+      organizationsTable: r.one.organizationsTable({
+        from: r.teamsTable.organizationId,
+        to: r.organizationsTable.id,
+      }),
+      teamMembersTables: r.many.teamMembersTable({
+        from: r.teamsTable.id,
+        to: r.teamMembersTable.teamId,
+      }),
+    },
+    teamMembersTable: {
+      teamsTable: r.one.teamsTable({
+        from: r.teamMembersTable.teamId,
+        to: r.teamsTable.id,
+      }),
+      usersTable: r.one.usersTable({
+        from: r.teamMembersTable.userId,
+        to: r.usersTable.id,
+      }),
+    },
+    membersTable: {
+      organizationsTable: r.one.organizationsTable({
+        from: r.membersTable.organizationId,
+        to: r.organizationsTable.id,
+      }),
+      usersTable: r.one.usersTable({
+        from: r.membersTable.userId,
+        to: r.usersTable.id,
+      }),
+    },
+    invitationsTable: {
+      organizationsTable: r.one.organizationsTable({
+        from: r.invitationsTable.organizationId,
+        to: r.organizationsTable.id,
+      }),
+      usersTable: r.one.usersTable({
+        from: r.invitationsTable.inviterId,
         to: r.usersTable.id,
       }),
     },

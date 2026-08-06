@@ -1,6 +1,6 @@
 import { db } from "@/database/connect";
 import { betterAuth } from "better-auth/minimal";
-import { admin, openAPI } from 'better-auth/plugins'
+import { admin, openAPI, organization } from 'better-auth/plugins'
 // import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import * as schema from "@/database/schema";
@@ -11,16 +11,8 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg", // or "mysql", "sqlite"
         schema,
-        // usePlural: true,
-
-        // schema: {
-        //     ...schema,
-        //     user: schema.usersTable,
-        //     session: schema.sessionsTable,
-        //     account: schema.accountsTable,
-        //     verification: schema.verificationsTable
-        // }
     }),
+    // model config
     user: {
         modelName: "usersTable",
     },
@@ -39,6 +31,8 @@ export const auth = betterAuth({
     verification: {
         modelName: "verificationsTable",
     },
+
+    // auth config
     experimental: {
         joins: true
     },
@@ -51,6 +45,28 @@ export const auth = betterAuth({
         admin({
             defaultRole: "requester",
             adminRoles: ["admin"]
+        }),
+        organization({
+            teams: {
+                enabled: true,
+            },
+            schema: {
+                organization: {
+                    modelName: "organizationsTable",
+                },
+                invitation: {
+                    modelName: "invitationsTable"
+                },
+                member: {
+                    modelName: "membersTable"
+                },
+                team: {
+                    modelName: "teamsTable",
+                },
+                teamMember: {
+                    modelName: "teamMembersTable"
+                }
+            }
         })
     ]
 });
