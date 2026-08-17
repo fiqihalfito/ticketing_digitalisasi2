@@ -17,14 +17,14 @@ services:
       - "7878:5432"
 
     volumes:
-      - ticketing_digitalisasi2:/var/lib/postgresql
+      - ticketing_digitalisasi2_postgres:/var/lib/postgresql
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fiqih -d ticketing_digitalisasi2"]
       interval: 10s
       timeout: 5s
       retries: 5
-    
+
   minio:
       image: minio/minio:latest
       # image: docker.io/minio/minio:latest
@@ -40,11 +40,11 @@ services:
           # Path kalau script compose ada di windows host
           # - C:/Users/fiqih/Documents/Coding/minio/minio-ticketing_digitalisasi2:/data
           # Path kalau script berada di wsl2
-        - /mnt/c/Users/fiqih/Documents/Coding/minio/minio-ticketing_digitalisasi2:/data
-      # - ./storage/minio_data:/data
-      # - ./storage/pdfs:/data/pdfs # opsional: mount folder host untuk PDF
+          # - /mnt/c/Users/fiqih/Documents/Coding/minio/minio-ticketing_digitalisasi2:/data
+       - ./storage/minio_data:/data
+          # - ./storage/pdfs:/data/pdfs # opsional: mount folder host untuk PDF
       restart: unless-stopped
-  
+
 
 volumes:
-  ticketing_digitalisasi2:
+  ticketing_digitalisasi2_postgres:
