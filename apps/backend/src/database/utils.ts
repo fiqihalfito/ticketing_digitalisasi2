@@ -7,7 +7,7 @@ import { Kind, type TObject } from '@sinclair/typebox'
 import {
     createInsertSchema,
     createSelectSchema,
-    BuildSchema,
+    type BuildSchema,
 } from 'drizzle-typebox'
 
 import { table } from './tables'
@@ -95,7 +95,7 @@ export const spreads = <
     const newSchema: Record<string, unknown> = {}
     const keys = Object.keys(models)
 
-    for (const key of keys) newSchema[key] = spread(models[key], mode)
+    for (const key of keys) newSchema[key] = spread(models[key]!, mode)
 
     return newSchema as any
 }

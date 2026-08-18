@@ -15,6 +15,7 @@ export const auth = betterAuth({
     // model config
     user: {
         modelName: "usersTable",
+
     },
     session: {
         modelName: "sessionsTable",
@@ -46,28 +47,28 @@ export const auth = betterAuth({
             defaultRole: "requester",
             adminRoles: ["admin"]
         }),
-        organization({
-            teams: {
-                enabled: true,
-            },
-            schema: {
-                organization: {
-                    modelName: "organizationsTable",
-                },
-                invitation: {
-                    modelName: "invitationsTable"
-                },
-                member: {
-                    modelName: "membersTable"
-                },
-                team: {
-                    modelName: "teamsTable",
-                },
-                teamMember: {
-                    modelName: "teamMembersTable"
-                }
-            }
-        })
+        // organization({
+        //     teams: {
+        //         enabled: true,
+        //     },
+        //     schema: {
+        //         organization: {
+        //             modelName: "organizationsTable",
+        //         },
+        //         invitation: {
+        //             modelName: "invitationsTable"
+        //         },
+        //         member: {
+        //             modelName: "membersTable"
+        //         },
+        //         team: {
+        //             modelName: "teamsTable",
+        //         },
+        //         teamMember: {
+        //             modelName: "teamMembersTable"
+        //         }
+        //     }
+        // })
     ]
 });
 
