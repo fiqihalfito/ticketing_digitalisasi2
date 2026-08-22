@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, char, index, integer, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, char, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
 import { timestamps } from "./column-helper";
 
 export const subfieldsTable = pgTable("subfields", {
@@ -103,5 +103,51 @@ export const subDepartmentsTable = pgTable('sub_departments', {
     subDepartmentId: uuid("sub_department_id").primaryKey().default(sql`uuidv7()`),
     name: text("name").notNull(),
     departementId: uuid('departement_id').notNull().references(() => departementsTable.departementId),
+    userId: uuid('user_id').notNull().references(() => usersTable.id),
+    ...timestamps(),
+})
+
+export const teamsTable = pgTable('teams', {
+    teamId: uuid('team_id').primaryKey().default(sql`uuidv7()`),
+    subDepartmentId: uuid('sub_department_id').notNull().references(() => subDepartmentsTable.subDepartmentId),
+    name: text("name").notNull(),
+    ...timestamps(),
+})
+
+export const subTeamsTable = pgTable('sub_teams', {
+    subTeamId: uuid('sub_team_id').primaryKey().default(sql`uuidv7()`),
+    teamId: uuid('team_id').notNull().references(() => teamsTable.teamId),
+    name: text("name").notNull(),
+    ...timestamps(),
+})
+
+export const roleMemberEnum = pgEnum('role_member', ['requester', 'executioner'])
+export const teamMembersTable = pgTable('team_members', {
+    teamMemberId: uuid('team_member_id').primaryKey().default(sql`uuidv7()`),
+    userId: uuid('user_id').notNull().references(() => usersTable.id),
+    teamId: uuid('team_id').notNull().references(() => teamsTable.teamId),
+    subTeamId: uuid('sub_team_id').references(() => subTeamsTable.subTeamId),
+    roleMember: roleMemberEnum(),
+    ...timestamps(),
+})
+
+export const teamLeadersTable = pgTable('team_leaders', {
+    teamLeaderId: uuid('team_leader_id').primaryKey().default(sql`uuidv7()`),
+    userId: uuid('user_id').notNull().references(() => usersTable.id),
+    teamId: uuid('team_id').notNull().references(() => teamsTable.teamId),
+    ...timestamps(),
+})
+
+export const applicationServicesTable = pgTable('application_services', {
+    applicationServiceId: uuid('application_service_id').primaryKey().default(sql`uuidv7()`),
+    subDepartmentId: uuid('sub_department_id').notNull().references(() => subDepartmentsTable.subDepartmentId),
+    name: text("name").notNull(),
+    ...timestamps(),
+})
+
+export const helpTopicsTable = pgTable('help_topics', {
+    helpTopicId: uuid('help_topic_id').primaryKey().default(sql`uuidv7()`),
+    applicationServiceId: uuid('application_service_id').notNull().references(() => applicationServicesTable.applicationServiceId),
+    title: text("title").notNull(),
     ...timestamps(),
 })
