@@ -151,3 +151,30 @@ export const helpTopicsTable = pgTable('help_topics', {
     title: text("title").notNull(),
     ...timestamps(),
 })
+
+export const statusEnum = pgEnum('status', ['open', 'in_progress', 'closed'])
+export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high'])
+export const ticketsTable = pgTable('tickets', {
+    ticketId: uuid('ticket_id').primaryKey().default(sql`uuidv7()`),
+    requesterMemberId: uuid('requester_member_id').notNull().references(() => teamMembersTable.teamMemberId),
+    helpTopicId: uuid('help_topic_id').notNull().references(() => helpTopicsTable.helpTopicId),
+    status: statusEnum('status').notNull().default('open'),
+    priority: priorityEnum('priority').notNull().default('medium'),
+    title: text("title").notNull(),
+    ...timestamps(),
+})
+
+export const ticketAssignmentsTable = pgTable('ticket_assignments', {
+    ticketAssignmentId: uuid('ticket_assignment_id').primaryKey().default(sql`uuidv7()`),
+    ticketId: uuid('ticket_id').notNull().references(() => ticketsTable.ticketId),
+    assigneeMemberId: uuid('assignee_member_id').notNull().references(() => teamMembersTable.teamMemberId),
+    ...timestamps(),
+})
+
+export const ticketChatsTable = pgTable('ticket_chats', {
+    ticketChatId: uuid('ticket_chat_id').primaryKey().default(sql`uuidv7()`),
+    ticketId: uuid('ticket_id').notNull().references(() => ticketsTable.ticketId),
+    teamMemberId: uuid('team_member_id').notNull().references(() => teamMembersTable.teamMemberId),
+    bodyChat: text('body_chat').notNull(),
+    ...timestamps(),
+})
