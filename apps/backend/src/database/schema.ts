@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { boolean, char, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
-import { timestamps } from "./column-helper";
+import { boolean, char, index, integer, jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
+import { timestamps } from "./helper/column-helper";
 
 export const subfieldsTable = pgTable("subfields", {
     subfieldId: uuid("subfield_id").primaryKey().default(sql`uuidv7()`),
@@ -29,7 +29,7 @@ export const usersTable = pgTable("users", {
 
 export const sessionsTable = pgTable("sessions", {
     id: uuid("session_id").primaryKey().default(sql`uuidv7()`),
-    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     token: varchar("token").notNull().unique(),
     expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
     ipAddress: text("ip_address"),
@@ -44,7 +44,7 @@ export const sessionsTable = pgTable("sessions", {
 
 export const accountsTable = pgTable("accounts", {
     id: uuid("account_id").primaryKey().default(sql`uuidv7()`),
-    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     issuer: text("issuer").notNull(),
     providerAccountId: text("provider_account_id").notNull(),
     providerId: text("provider_id").notNull(),
@@ -175,6 +175,14 @@ export const ticketChatsTable = pgTable('ticket_chats', {
     ticketChatId: uuid('ticket_chat_id').primaryKey().default(sql`uuidv7()`),
     ticketId: uuid('ticket_id').notNull().references(() => ticketsTable.ticketId),
     teamMemberId: uuid('team_member_id').notNull().references(() => teamMembersTable.teamMemberId),
-    bodyChat: text('body_chat').notNull(),
+    bodyChat: jsonb('body_chat').notNull(),
+    ...timestamps(),
+})
+
+export const ticketChatAttachmentsTable = pgTable('ticket_chat_attachments', {
+    ticketChatAttachmentId: uuid('ticket_chat_attachment_id').primaryKey().default(sql`uuidv7()`),
+    ticketChatId: uuid('ticket_chat_id').notNull().references(() => ticketChatsTable.ticketChatId),
+    title: text('title').notNull(),
+    urlFile: text('url_file').notNull(),
     ...timestamps(),
 })
