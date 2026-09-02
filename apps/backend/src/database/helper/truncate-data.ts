@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { db } from "../connect";
 
-async function truncateAll() {
+export async function truncateAll() {
     const result = await db.execute(
         sql.raw(`
       SELECT tablename
@@ -29,9 +29,9 @@ async function truncateAll() {
     console.log(`✅ Truncated ${tables.length} tables:`, tables.join(", "));
 }
 
-truncateAll()
-    .then(() => process.exit(0))
-    .catch((err) => {
-        console.error("❌ Truncate failed:", err);
-        process.exit(1);
-    });
+// truncateAll()
+//     .then(() => process.exit(0))
+//     .catch((err) => {
+//         console.error("❌ Truncate failed:", err);
+//         process.exit(1);
+//     });

@@ -94,6 +94,7 @@ export const organizationsTable = pgTable("organizations", {
 
 export const departementsTable = pgTable('departements', {
     departementId: uuid("departement_id").primaryKey().default(sql`uuidv7()`),
+    organizationId: uuid("organization_id").notNull().references(() => organizationsTable.organizationId),
     name: text("name").notNull(),
     userId: uuid('user_id').notNull().references(() => usersTable.id),
     ...timestamps(),
