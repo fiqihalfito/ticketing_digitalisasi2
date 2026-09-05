@@ -41,35 +41,19 @@ export const auth = betterAuth({
         enabled: true
     },
 
+
     plugins: [
         openAPI(),
         admin({
             defaultRole: "requester",
             adminRoles: ["admin"]
         }),
-        // organization({
-        //     teams: {
-        //         enabled: true,
-        //     },
-        //     schema: {
-        //         organization: {
-        //             modelName: "organizationsTable",
-        //         },
-        //         invitation: {
-        //             modelName: "invitationsTable"
-        //         },
-        //         member: {
-        //             modelName: "membersTable"
-        //         },
-        //         team: {
-        //             modelName: "teamsTable",
-        //         },
-        //         teamMember: {
-        //             modelName: "teamMembersTable"
-        //         }
-        //     }
-        // })
-    ]
+    ],
+    advanced: {
+        database: {
+            generateId: false
+        }
+    }
 });
 
 // Export type untuk TypeScript

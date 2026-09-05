@@ -1,274 +1,448 @@
 import { db } from "../connect";
 import {
+    applicationServicesTable,
     departementsTable,
+    helpTopicsTable,
     organizationsTable,
     subDepartmentsTable,
     subTeamsTable,
     teamLeadersTable,
+    teamMembersTable,
     teamsTable,
     usersTable,
 } from "../schema";
 import { truncateAll } from "./truncate-data";
 
-// =========================================================================
-// USERS
-// =========================================================================
-const userIds = {
-    hermawanAsmoko: "01a05ea9-54cb-7c23-b9c0-8f4f53a9133d",
-    fulanVpLain: "01a05ea9-54cc-751e-9916-fbbb2b29dff2",
-    yoraYunita: "01a05ea9-54cc-779f-9637-14a7204f0d25",
-    christlandPSimatupang: "01a05ea9-54cc-7a68-80e6-f580860b2d23",
-    andrian: "01a05ea9-54cc-710e-8ea1-305280d5c586",
-    ariefK2: "01a05ea9-54cd-79d4-b0df-2356c8a14ab9",
-    fiqihAlfito: "01a05ea9-54cd-70de-b4b6-d2394196d0e7",
-    mVickyaRamadhan: "01a05ea9-54cd-76d5-bf61-013ad320f78f",
-    herri: "01a05ea9-54cd-7f8c-965b-72b9714e84c9",
-    dbaAaaK1: "01a05ea9-54cd-7725-9fba-2b4307c919fb",
-    dbaBbbK1: "01a05ea9-54ce-7770-8a3f-f119f07fe751",
-    devopsAaaK1: "01a05ea9-54ce-7a94-92e1-e0b346be3a3c",
-    devopsBbbK1: "01a05ea9-54ce-7cc8-b50a-3913279a26d5",
-    dbaAaaK2: "01a05ea9-54ce-7cba-8e38-67fcf8fe3c7f",
-    dbaBbbK2: "01a05ea9-54ce-7f01-a9c3-e25dc5f50b95",
-    devopsAaaK2: "01a05ea9-54ce-754f-9594-36fde9ccf6f0",
-    devopsBbbK2: "01a05ea9-54ce-783c-9f03-0c08e18a5e1b",
-    dbaAaaK3: "01a05ea9-54ce-7f28-8a2c-e58b14b06de0",
-    dbaBbbK3: "01a05ea9-54ce-7242-a2a1-88653ff7cb35",
-    devopsAaaK3: "01a05ea9-54ce-79c8-8134-9fbf80ed5564",
-    devopsBbbK3: "01a05ea9-54ce-7ad4-a4fb-a2548221185d",
-    atasanQonita: "01a05ea9-54ce-7038-91c1-c5e6744bd7a5",
-    qonitaSupport: "01a05ea9-54ce-7143-8ed8-b341bd58f8fa",
-    aaaSupport: "01a05ea9-54ce-7c7b-acd7-cfb29b88eb3e",
-    bbbSupport: "01a05ea9-54cf-7b0f-bd63-69aa7fae9cca",
-} as const;
 
-// helper: "Hermawan Asmoko" -> "hermawan.asmoko@iconpln.co.id"
-function toEmail(name: string): string {
-    const clean = name
-        .toLowerCase()
-        .replace(/\./g, "") // remove periods (e.g. "M. Vickya" -> "m vickya")
-        .replace(/[^a-z0-9\s]/g, "") // strip other non-alphanumeric chars
-        .trim()
-        .split(/\s+/)
-        .join(".");
-    return `${clean}@iconpln.co.id`;
-}
-
-const userNames: Record<keyof typeof userIds, string> = {
-    hermawanAsmoko: "Hermawan Asmoko",
-    fulanVpLain: "Fulan VP Lain",
-    yoraYunita: "Yora Yunita",
-    christlandPSimatupang: "Christland P. Simatupang",
-    andrian: "Andrian",
-    ariefK2: "Arief K2",
-    fiqihAlfito: "Fiqih Alfito",
-    mVickyaRamadhan: "M. Vickya Ramadhan",
-    herri: "Herri",
-    dbaAaaK1: "DBA AAA K1",
-    dbaBbbK1: "DBA BBB K1",
-    devopsAaaK1: "Devops AAA K1",
-    devopsBbbK1: "Devops BBB K1",
-    dbaAaaK2: "DBA AAA K2",
-    dbaBbbK2: "DBA BBB K2",
-    devopsAaaK2: "Devops AAA K2",
-    devopsBbbK2: "Devops BBB K2",
-    dbaAaaK3: "DBA AAA K3",
-    dbaBbbK3: "DBA BBB K3",
-    devopsAaaK3: "Devops AAA K3",
-    devopsBbbK3: "Devops BBB K3",
-    atasanQonita: "Atasan Qonita",
-    qonitaSupport: "Qonita support",
-    aaaSupport: "aaa support",
-    bbbSupport: "bbb support",
-};
-
-const userData: typeof usersTable.$inferInsert[] = (
-    Object.keys(userIds) as (keyof typeof userIds)[]
-).map((key) => ({
-    id: userIds[key],
-    name: userNames[key],
-    email: toEmail(userNames[key]),
-    emailVerified: true,
-}));
-
-// =========================================================================
-// ORGANIZATIONS
-// =========================================================================
-const organizationIds = {
-    plnIconPlus: "01a05ea9-54cf-72bf-b77a-3fca49c14abf",
-    plnPusat: "01a05ea9-54cf-7089-ad13-eadbdec4dff4",
-    perusahaanExternal: "01a05ea9-54cf-7e97-865e-e9f26287c90c",
-};
-
-const organizationData: typeof organizationsTable.$inferInsert[] = [
-    { organizationId: organizationIds.plnIconPlus, name: "PLN Icon Plus" },
-    { organizationId: organizationIds.plnPusat, name: "PLN Pusat" },
-    { organizationId: organizationIds.perusahaanExternal, name: "Perusahaan External" },
+const userData: typeof usersTable.$inferInsert[] = [
+    {
+        id: "01a063fa-e4a5-73e6-b24e-86ed8da0d11f",
+        name: "Hermawan Asmoko",
+        email: "hermawan.asmoko@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-1f343fc6bf17",
+        name: "Fulan VP Lain",
+        email: "fulan.vp.lain@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-237110d96a42",
+        name: "Yora Yunita",
+        email: "yora.yunita@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-260567b955df",
+        name: "Christland P. Simatupang",
+        email: "christland.p.simatupang@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-2adfd381b125",
+        name: "Andrian",
+        email: "andrian@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-2c5fb78c3188",
+        name: "Arief Man",
+        email: "arief.man@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-32b598c087ef",
+        name: "Fiqih Alfito",
+        email: "fiqih.alfito@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-352313c1d24a",
+        name: "M. Vickya Ramadhan",
+        email: "m.vickya.ramadhan@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-387d56b6789c",
+        name: "Herri",
+        email: "herri@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-3de04f955533",
+        name: "DBA AAA K1",
+        email: "dba.aaa.k1@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-4269ef37545c",
+        name: "DBA BBB K1",
+        email: "dba.bbb.k1@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-46e00166b1f4",
+        name: "Devops AAA K1",
+        email: "devops.aaa.k1@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-49eedff59546",
+        name: "Devops BBB K1",
+        email: "devops.bbb.k1@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-4ddce87752c3",
+        name: "DBA AAA K2",
+        email: "dba.aaa.k2@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-502cbf947a6c",
+        name: "DBA BBB K2",
+        email: "dba.bbb.k2@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-54fc88297f83",
+        name: "Devops AAA K2",
+        email: "devops.aaa.k2@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-59aa6f111853",
+        name: "Devops BBB K2",
+        email: "devops.bbb.k2@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-5c7a551bccd0",
+        name: "DBA AAA K3",
+        email: "dba.aaa.k3@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-63f8c8d1c62c",
+        name: "DBA BBB K3",
+        email: "dba.bbb.k3@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-654ee2793ccb",
+        name: "Devops AAA K3",
+        email: "devops.aaa.k3@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-6b22a84e125f",
+        name: "Devops BBB K3",
+        email: "devops.bbb.k3@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-6ecbc6bed71c",
+        name: "Atasan Qonita",
+        email: "atasan.qonita@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-7246573826bb",
+        name: "Qonita support",
+        email: "qonita.support@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-77e3fc14e6bd",
+        name: "aaa support",
+        email: "aaa.support@iconpln.co.id",
+        emailVerified: true,
+    },
+    {
+        id: "01a063fa-e4a6-703e-8ecf-7ad4e0f01801",
+        name: "bbb support",
+        email: "bbb.support@iconpln.co.id",
+        emailVerified: true,
+    },
 ];
 
+// convenience lookup by name -> id, used only while building this file
+const USER = {
+    hermawanAsmoko: "01a063fa-e4a5-73e6-b24e-86ed8da0d11f",
+    fulanVpLain: "01a063fa-e4a6-703e-8ecf-1f343fc6bf17",
+    yoraYunita: "01a063fa-e4a6-703e-8ecf-237110d96a42",
+    christland: "01a063fa-e4a6-703e-8ecf-260567b955df",
+    andrian: "01a063fa-e4a6-703e-8ecf-2adfd381b125",
+    ariefMan: "01a063fa-e4a6-703e-8ecf-2c5fb78c3188",
+    fiqihAlfito: "01a063fa-e4a6-703e-8ecf-32b598c087ef",
+    vickyaRamadhan: "01a063fa-e4a6-703e-8ecf-352313c1d24a",
+    herri: "01a063fa-e4a6-703e-8ecf-387d56b6789c",
+    dbaAaaK1: "01a063fa-e4a6-703e-8ecf-3de04f955533",
+    dbaBbbK1: "01a063fa-e4a6-703e-8ecf-4269ef37545c",
+    devopsAaaK1: "01a063fa-e4a6-703e-8ecf-46e00166b1f4",
+    devopsBbbK1: "01a063fa-e4a6-703e-8ecf-49eedff59546",
+    dbaAaaK2: "01a063fa-e4a6-703e-8ecf-4ddce87752c3",
+    dbaBbbK2: "01a063fa-e4a6-703e-8ecf-502cbf947a6c",
+    devopsAaaK2: "01a063fa-e4a6-703e-8ecf-54fc88297f83",
+    devopsBbbK2: "01a063fa-e4a6-703e-8ecf-59aa6f111853",
+    dbaAaaK3: "01a063fa-e4a6-703e-8ecf-5c7a551bccd0",
+    dbaBbbK3: "01a063fa-e4a6-703e-8ecf-63f8c8d1c62c",
+    devopsAaaK3: "01a063fa-e4a6-703e-8ecf-654ee2793ccb",
+    devopsBbbK3: "01a063fa-e4a6-703e-8ecf-6b22a84e125f",
+    atasanQonita: "01a063fa-e4a6-703e-8ecf-6ecbc6bed71c",
+    qonitaSupport: "01a063fa-e4a6-703e-8ecf-7246573826bb",
+    aaaSupport: "01a063fa-e4a6-703e-8ecf-77e3fc14e6bd",
+    bbbSupport: "01a063fa-e4a6-703e-8ecf-7ad4e0f01801",
+} as const;
+
 // =========================================================================
-// DEPARTEMENTS
+// Organizations
 // =========================================================================
-const departementIds = {
-    digitalisasiPln2: "01a05ea9-54cf-7979-bb77-857b4bfe4aa4",
-    operasiPln: "01a05ea9-54cf-7d24-be70-9c6874596536",
-    outsourcingEtc: "01a05ea9-54cf-7f62-bb11-f21c06a748ad",
-};
+
+const organizationData: typeof organizationsTable.$inferInsert[] = [
+    { organizationId: "01a063fa-e4a6-703e-8ecf-7da7cb01ce2c", name: "PLN Icon Plus" },
+    { organizationId: "01a063fa-e4a6-703e-8ecf-8003d9a19f78", name: "PLN Pusat" },
+    { organizationId: "01a063fa-e4a6-703e-8ecf-8432c1a6eceb", name: "Perusahaan External" },
+];
+
+const ORG = {
+    plnIconPlus: "01a063fa-e4a6-703e-8ecf-7da7cb01ce2c",
+    plnPusat: "01a063fa-e4a6-703e-8ecf-8003d9a19f78",
+    perusahaanExternal: "01a063fa-e4a6-703e-8ecf-8432c1a6eceb",
+} as const;
+
+// =========================================================================
+// Departements
+// =========================================================================
 
 const departementData: typeof departementsTable.$inferInsert[] = [
     {
-        departementId: departementIds.digitalisasiPln2,
+        departementId: "01a063fa-e4a6-703e-8ecf-8b267a3b47e9",
         name: "Digitalisasi PLN 2",
-        userId: userIds.hermawanAsmoko,
-        organizationId: organizationIds.plnIconPlus,
+        organizationId: ORG.plnIconPlus,
+        userId: USER.hermawanAsmoko,
     },
     {
-        departementId: departementIds.operasiPln,
+        departementId: "01a063fa-e4a6-703e-8ecf-8c3b11ace2fe",
         name: "Operasi PLN",
-        userId: userIds.fulanVpLain,
-        organizationId: organizationIds.plnIconPlus,
+        organizationId: ORG.plnIconPlus,
+        userId: USER.fulanVpLain,
     },
     {
-        departementId: departementIds.outsourcingEtc,
+        departementId: "01a063fa-e4a6-703e-8ecf-9059fbe14ca8",
         name: "Outsourcing etc",
-        userId: userIds.hermawanAsmoko, // NOTE: no owner specified in requirement, defaulted — confirm if needed
-        organizationId: organizationIds.perusahaanExternal,
+        organizationId: ORG.perusahaanExternal,
+        // no user specified in the requirement for this department
+        userId: USER.fulanVpLain,
     },
 ];
 
+const DEPT = {
+    digitalisasiPln2: "01a063fa-e4a6-703e-8ecf-8b267a3b47e9",
+    operasiPln: "01a063fa-e4a6-703e-8ecf-8c3b11ace2fe",
+    outsourcingEtc: "01a063fa-e4a6-703e-8ecf-9059fbe14ca8",
+} as const;
+
 // =========================================================================
-// SUB DEPARTMENTS
+// Sub Departements
 // =========================================================================
-const subDepartmentIds = {
-    aplikasiPlnKorporat1: "01a05ea9-54cf-7704-8ba1-e910d6b3e997",
-    aplikasiPlnKorporat2: "01a05ea9-54cf-75fd-b097-c2b388ba7619",
-    aplikasiPlnKorporat3: "01a05ea9-54cf-75aa-a6fc-f4b2cad8d4c2",
-    plnOperasi: "01a05ea9-54cf-713c-84f8-14533f51b53a",
-};
 
 const subDepartmentData: typeof subDepartmentsTable.$inferInsert[] = [
     {
-        subDepartmentId: subDepartmentIds.aplikasiPlnKorporat1,
+        subDepartmentId: "01a063fa-e4a6-703e-8ecf-94bee3c8e046",
         name: "Aplikasi PLN Korporat dan Pelayanan Pelanggan 1",
-        departementId: departementIds.digitalisasiPln2,
-        userId: userIds.christlandPSimatupang,
+        departementId: DEPT.digitalisasiPln2,
+        userId: USER.christland,
     },
     {
-        subDepartmentId: subDepartmentIds.aplikasiPlnKorporat2,
+        subDepartmentId: "01a063fa-e4a6-703e-8ecf-9a45c6bd98f7",
         name: "Aplikasi PLN Korporat dan Pelayanan Pelanggan 2",
-        departementId: departementIds.digitalisasiPln2,
-        userId: userIds.ariefK2,
+        departementId: DEPT.digitalisasiPln2,
+        userId: USER.ariefMan,
     },
     {
-        subDepartmentId: subDepartmentIds.aplikasiPlnKorporat3,
+        subDepartmentId: "01a063fa-e4a6-703e-8ecf-9c7c57033d89",
         name: "Aplikasi PLN Korporat dan Pelayanan Pelanggan 3",
-        departementId: departementIds.digitalisasiPln2,
-        userId: userIds.andrian,
+        departementId: DEPT.digitalisasiPln2,
+        userId: USER.andrian,
     },
     {
-        subDepartmentId: subDepartmentIds.plnOperasi,
+        subDepartmentId: "01a063fa-e4a6-703e-8ecf-a211240e1881",
         name: "PLN Operasi",
-        departementId: departementIds.operasiPln,
-        userId: userIds.atasanQonita,
+        departementId: DEPT.operasiPln,
+        userId: USER.atasanQonita,
     },
 ];
 
+const SUBDEPT = {
+    pelayananPelanggan1: "01a063fa-e4a6-703e-8ecf-94bee3c8e046",
+    pelayananPelanggan2: "01a063fa-e4a6-703e-8ecf-9a45c6bd98f7",
+    pelayananPelanggan3: "01a063fa-e4a6-703e-8ecf-9c7c57033d89",
+    plnOperasi: "01a063fa-e4a6-703e-8ecf-a211240e1881",
+} as const;
+
 // =========================================================================
-// TEAMS
+// Teams
 // =========================================================================
-const teamIds = {
-    seksiOperasional: "01a05ea9-54cf-7055-9c83-8f90f562cccf",
-    seksiPengembangan: "01a05ea9-54cf-7e4e-8c6c-6e167e89854d",
-    seksiSupportQonita: "01a05ea9-54cf-7180-8d19-3aa70c736667",
-};
 
 const teamData: typeof teamsTable.$inferInsert[] = [
     {
-        teamId: teamIds.seksiOperasional,
+        teamId: "01a063fa-e4a6-703e-8ecf-a61c08f5250a",
         name: "Seksi Operasional",
-        subDepartmentId: subDepartmentIds.aplikasiPlnKorporat1,
+        subDepartmentId: SUBDEPT.pelayananPelanggan1,
     },
     {
-        teamId: teamIds.seksiPengembangan,
+        teamId: "01a063fa-e4a6-703e-8ecf-a8f9d623b606",
         name: "Seksi Pengembangan",
-        subDepartmentId: subDepartmentIds.aplikasiPlnKorporat1,
+        subDepartmentId: SUBDEPT.pelayananPelanggan1,
     },
     {
-        teamId: teamIds.seksiSupportQonita,
+        teamId: "01a063fa-e4a6-703e-8ecf-ae7257ac25a9",
         name: "Seksi Support Qonita",
-        subDepartmentId: subDepartmentIds.plnOperasi,
+        subDepartmentId: SUBDEPT.plnOperasi,
     },
 ];
 
+const TEAM = {
+    seksiOperasional: "01a063fa-e4a6-703e-8ecf-a61c08f5250a",
+    seksiPengembangan: "01a063fa-e4a6-703e-8ecf-a8f9d623b606",
+    seksiSupportQonita: "01a063fa-e4a6-703e-8ecf-ae7257ac25a9",
+} as const;
+
 // =========================================================================
-// TEAM LEADERS
+// Sub Teams
 // =========================================================================
+
+const subTeamData: typeof subTeamsTable.$inferInsert[] = [
+    { subTeamId: "01a063fa-e4a6-703e-8ecf-c37ac34a9664", name: "DBA", teamId: TEAM.seksiOperasional },
+    { subTeamId: "01a063fa-e4a6-703e-8ecf-c72fd338bf16", name: "DEVOPS", teamId: TEAM.seksiOperasional },
+];
+
+const SUBTEAM = {
+    dba: "01a063fa-e4a6-703e-8ecf-c37ac34a9664",
+    devops: "01a063fa-e4a6-703e-8ecf-c72fd338bf16",
+} as const;
+
+// =========================================================================
+// Team Leaders
+// =========================================================================
+
 const teamLeaderData: typeof teamLeadersTable.$inferInsert[] = [
     {
-        teamLeaderId: "01a05ea9-54cf-767a-96ed-7010d269eed1",
-        userId: userIds.fiqihAlfito,
-        teamId: teamIds.seksiOperasional,
+        teamLeaderId: "01a063fa-e4a6-703e-8ecf-b3c3dd74e66d",
+        userId: USER.fiqihAlfito,
+        teamId: TEAM.seksiOperasional,
     },
     {
-        teamLeaderId: "01a05ea9-54cf-72c9-a21d-e8b5ebd776db",
-        userId: userIds.mVickyaRamadhan,
-        teamId: teamIds.seksiOperasional,
+        teamLeaderId: "01a063fa-e4a6-703e-8ecf-b61b9a844a29",
+        userId: USER.vickyaRamadhan,
+        teamId: TEAM.seksiOperasional,
     },
     {
-        teamLeaderId: "01a05ea9-54cf-7b36-9611-355f5633e1a1",
-        userId: userIds.herri,
-        teamId: teamIds.seksiOperasional,
+        teamLeaderId: "01a063fa-e4a6-703e-8ecf-b996b71fdedd",
+        userId: USER.herri,
+        teamId: TEAM.seksiOperasional,
     },
     {
-        teamLeaderId: "01a05ea9-54cf-728b-8867-0c5f2f6a5169",
-        userId: userIds.qonitaSupport,
-        teamId: teamIds.seksiSupportQonita,
+        teamLeaderId: "01a063fa-e4a6-703e-8ecf-be64606843e8",
+        userId: USER.qonitaSupport,
+        teamId: TEAM.seksiSupportQonita,
     },
 ];
 
 // =========================================================================
-// SUB TEAMS
+// Application Services
 // =========================================================================
-const subTeamData: typeof subTeamsTable.$inferInsert[] = [
-    {
-        subTeamId: "01a05ea9-54cf-7e8e-97e3-ccf5ff405de9",
-        name: "DBA",
-        teamId: teamIds.seksiOperasional,
-    },
-    {
-        subTeamId: "01a05ea9-54cf-77e5-9252-5cba3ac96748",
-        name: "DEVOPS",
-        teamId: teamIds.seksiOperasional,
-    },
+
+const applicationServiceData: typeof applicationServicesTable.$inferInsert[] = [
+    { applicationServiceId: "01a063fa-e4a6-703e-8ecf-c9a85f85c35c", name: "AMS", subDepartmentId: SUBDEPT.pelayananPelanggan1 },
+    { applicationServiceId: "01a063fa-e4a6-703e-8ecf-cce5f1ed59ce", name: "ESPPD", subDepartmentId: SUBDEPT.pelayananPelanggan1 },
+    { applicationServiceId: "01a063fa-e4a6-703e-8ecf-d2df473f06bb", name: "PLN Daily", subDepartmentId: SUBDEPT.pelayananPelanggan1 },
+];
+
+const APPSVC = {
+    ams: "01a063fa-e4a6-703e-8ecf-c9a85f85c35c",
+    esppd: "01a063fa-e4a6-703e-8ecf-cce5f1ed59ce",
+    plnDaily: "01a063fa-e4a6-703e-8ecf-d2df473f06bb",
+} as const;
+
+// =========================================================================
+// Team Members
+// K1/K2/K3 users -> "Seksi Operasional", role "executioner"
+// name starting with "DBA" -> sub_team DBA, "Devops" -> sub_team DEVOPS
+// aaa support / bbb support -> "Seksi Support Qonita", role "requester", no sub_team
+// =========================================================================
+
+const teamMemberData: typeof teamMembersTable.$inferInsert[] = [
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-d785be58ffaf", userId: USER.dbaAaaK1, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-d83566e4c943", userId: USER.dbaBbbK1, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-dcc43762ac22", userId: USER.devopsAaaK1, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-e2415ab62553", userId: USER.devopsBbbK1, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-e45249c9bd8a", userId: USER.dbaAaaK2, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-e99dc3a08342", userId: USER.dbaBbbK2, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-ec84707a262b", userId: USER.devopsAaaK2, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-f09de2306c1d", userId: USER.devopsBbbK2, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-f6eccb908735", userId: USER.dbaAaaK3, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-f933d38e9d9e", userId: USER.dbaBbbK3, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.dba, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ecf-ffff55754ad1", userId: USER.devopsAaaK3, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ed0-03e4d13e0fe8", userId: USER.devopsBbbK3, teamId: TEAM.seksiOperasional, subTeamId: SUBTEAM.devops, roleMember: "executioner" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ed0-0491a8a66764", userId: USER.aaaSupport, teamId: TEAM.seksiSupportQonita, subTeamId: null, roleMember: "requester" },
+    { teamMemberId: "01a063fa-e4a6-703e-8ed0-0ad6138050b5", userId: USER.bbbSupport, teamId: TEAM.seksiSupportQonita, subTeamId: null, roleMember: "requester" },
 ];
 
 // =========================================================================
-// SEED RUNNER
+// Help Topics
 // =========================================================================
+
+const helpTopicData: typeof helpTopicsTable.$inferInsert[] = [
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-0fd44cc78150", title: "Perubahan Data", applicationServiceId: APPSVC.ams },
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-135d13fdbcf2", title: "penambahan user", applicationServiceId: APPSVC.ams },
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-149f3e4c8cfc", title: "Perubahan Data", applicationServiceId: APPSVC.esppd },
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-1b193bc1f7be", title: "penambahan user", applicationServiceId: APPSVC.esppd },
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-1ce0f2d3dd07", title: "Perubahan Data", applicationServiceId: APPSVC.plnDaily },
+    { helpTopicId: "01a063fa-e4a6-703e-8ed0-205dd159ff2e", title: "penambahan user", applicationServiceId: APPSVC.plnDaily },
+];
+
+// =========================================================================
+// Seed runner
+// insert order follows FK dependency order
+// =========================================================================
+
 async function seed() {
     try {
         await truncateAll();
         console.log("Truncated all tables");
 
         await db.insert(usersTable).values(userData);
-        console.log("✓ Users seeded");
+        console.log("✓ users seeded");
 
         await db.insert(organizationsTable).values(organizationData);
-        console.log("✓ Organizations seeded");
+        console.log("✓ organizations seeded");
 
         await db.insert(departementsTable).values(departementData);
-        console.log("✓ Departements seeded");
+        console.log("✓ departements seeded");
 
         await db.insert(subDepartmentsTable).values(subDepartmentData);
-        console.log("✓ Sub departments seeded");
+        console.log("✓ sub_departments seeded");
 
         await db.insert(teamsTable).values(teamData);
-        console.log("✓ Teams seeded");
-
-        await db.insert(teamLeadersTable).values(teamLeaderData);
-        console.log("✓ Team leaders seeded");
+        console.log("✓ teams seeded");
 
         await db.insert(subTeamsTable).values(subTeamData);
-        console.log("✓ Sub teams seeded");
+        console.log("✓ sub_teams seeded");
+
+        await db.insert(teamLeadersTable).values(teamLeaderData);
+        console.log("✓ team_leaders seeded");
+
+        await db.insert(applicationServicesTable).values(applicationServiceData);
+        console.log("✓ application_services seeded");
+
+        await db.insert(teamMembersTable).values(teamMemberData);
+        console.log("✓ team_members seeded");
+
+        await db.insert(helpTopicsTable).values(helpTopicData);
+        console.log("✓ help_topics seeded");
 
         console.log("✓ Seed completed");
     } catch (err) {
