@@ -12,7 +12,21 @@ import {
     usersTable,
 } from "../schema";
 import { truncateAll } from "./truncate-data";
+import { createAuthClient } from "better-auth/client"
 
+export const authClient = createAuthClient({
+    baseURL: "http://localhost:3000/auth/api" // The base URL of your auth server
+})
+
+// =========================================================================
+// Users
+// =========================================================================
+
+await authClient.signUp.email({
+    email: "hermawan.asmoko@iconpln.co.id",
+    name: "Hermawan Asmoko",
+    password: "12345678"
+})
 
 const userData: typeof usersTable.$inferInsert[] = [
     {

@@ -23,11 +23,17 @@ export const auth = betterAuth({
         updateAge: 60 * 60 * 24,         // Update setiap 24 jam
         cookieCache: {
             enabled: true,
-            maxAge: 60 * 5                  // Cache 5 menit
-        }
+            maxAge: 60 * 5,
+            // strategy: "jwe",
+            // refreshCache: true                 // Cache 5 menit
+        },
+
     },
     account: {
         modelName: "accountsTable",
+        // storeStateStrategy: "cookie",
+        // storeAccountCookie: true
+
     },
     verification: {
         modelName: "verificationsTable",

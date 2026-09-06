@@ -6,7 +6,7 @@ import type { AuthModel } from "../../model";
 export const authMiddleware = new Elysia({ name: 'better-auth' })
     .macro({
         auth: {
-            async resolve({ status, request: { headers } }) {
+            async derive({ status, request: { headers } }) {
                 const session = await auth.api.getSession({
                     headers,
                 });

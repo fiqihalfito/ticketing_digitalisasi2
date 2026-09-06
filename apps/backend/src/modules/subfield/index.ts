@@ -10,20 +10,17 @@ export const subfield = new Elysia({ prefix: '/subfield' })
             tags: ['Subbidang']
         }
     })
-    .get('/', async () => {
-        const allSubfields = await SubfieldService.getAll()
-        return allSubfields
-    }, {
+    .get('/', {
         auth: true,
         detail: {
             summary: 'Get all subfields'
         }
+    }, async () => {
+        const allSubfields = await SubfieldService.getAll()
+        return allSubfields
     })
 
-    .get('/:id', async ({ params, status, user }) => {
-        const subfield = await SubfieldService.getSubfieldById(params.id)
-        return status(200, subfield)
-    }, {
+    .get('/:id', {
         auth: true,
         params: t.Object({
             id: t.String()
@@ -35,11 +32,14 @@ export const subfield = new Elysia({ prefix: '/subfield' })
         detail: {
             // summary: 'Get a subfield by ID'
         }
+    }, async ({ params, status, user }) => {
+        const subfield = await SubfieldService.getSubfieldById(params.id)
+        return status(200, subfield)
     })
 
-    .get('/dropdown', async () => {
+    .get('/dropdown', {
+        auth: true,
+    }, async () => {
         const dropdownData = await SubfieldService.getDropdown()
         return status(200, dropdownData)
-    }, {
-        auth: true,
     })
