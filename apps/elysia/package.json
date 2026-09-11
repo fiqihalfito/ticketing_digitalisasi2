@@ -1,0 +1,27 @@
+{
+  "name": "elysia",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "db:dev:push": "bunx --bun drizzle-kit push",
+    "db:dev:truncate": "bun ./src/database/utils/truncate-data.ts",
+    "db:dev:seed": "bun ./src/database/utils/seed.ts"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.3",
+    "@better-auth/infra": "^0.4.9",
+    "@better-auth/redis-storage": "^1.7.4",
+    "@elysia/openapi": "^1.4.16",
+    "better-auth": "^1.7.3",
+    "drizzle-orm": "^1.0.0-rc.4",
+    "elysia": "latest",
+    "ioredis": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.1",
+    "bun-types": "latest",
+    "drizzle-kit": "^1.0.0-rc.4"
+  },
+  "module": "src/index.js"
+}
