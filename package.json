@@ -6,6 +6,6 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "podman compose -f apps/backend/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
+    "dev": "podman compose -f apps/elysia/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
   }
 }
