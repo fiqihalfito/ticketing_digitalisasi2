@@ -11,7 +11,7 @@
   "devDependencies": {
     "@types/bun": "catalog:",
     "config": "workspace:*",
-    "@ticketing/elysia": "workspace:*"
+    "@ticketing/backend": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "7"

@@ -6,7 +6,7 @@
       "name": "ticketing-digitalisasi2-monorepo",
     },
     "apps/elysia": {
-      "name": "@ticketing/elysia",
+      "name": "@ticketing/backend",
       "version": "1.0.50",
       "dependencies": {
         "@better-auth/drizzle-adapter": "^1.7.3",
@@ -48,7 +48,7 @@
       "devDependencies": {
         "@react-router/dev": "8.2.0",
         "@tailwindcss/vite": "^4.2.2",
-        "@ticketing/elysia": "workspace:*",
+        "@ticketing/backend": "workspace:*",
         "@ticketing/lib": "workspace:*",
         "@types/bun": "catalog:",
         "@types/node": "^22",
@@ -77,7 +77,7 @@
         "elysia": "catalog:",
       },
       "devDependencies": {
-        "@ticketing/elysia": "workspace:*",
+        "@ticketing/backend": "workspace:*",
         "@types/bun": "catalog:",
         "config": "workspace:*",
       },
@@ -367,7 +367,7 @@
 
     "@tailwindcss/vite": ["@tailwindcss/vite@4.3.3", "", { "dependencies": { "@tailwindcss/node": "4.3.3", "@tailwindcss/oxide": "4.3.3", "tailwindcss": "4.3.3" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7 || ^8" } }, "sha512-yYU8cogLeSh/ms2jh8Fj7jaba/EWa7Ja6GoUqYZaraEuCI5YS6ms6ObZgjjedm+jm6XZjdNRWBpPP6Z86oOxcw=="],
 
-    "@ticketing/elysia": ["@ticketing/elysia@workspace:apps/elysia"],
+    "@ticketing/backend": ["@ticketing/backend@workspace:apps/elysia"],
 
     "@ticketing/frontend": ["@ticketing/frontend@workspace:apps/frontend"],
 
@@ -541,7 +541,7 @@
 
     "encodeurl": ["encodeurl@2.0.0", "", {}, "sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg=="],
 
-    "enhanced-resolve": ["enhanced-resolve@5.25.0", "", { "dependencies": { "graceful-fs": "^4.2.4", "tapable": "^2.3.3" } }, "sha512-ghq3mhs649mvbarTCAlZn2wRhbfHmzAFiKxoWA14B3VtqnxtZt+wz8BroKXU0tF3GiJsnUldjVncQGZ8qk4rdA=="],
+    "enhanced-resolve": ["enhanced-resolve@5.25.1", "", { "dependencies": { "graceful-fs": "^4.2.4", "tapable": "^2.3.3" } }, "sha512-nGXts5znJzmWPu+mIE9izCOzdg63oJca2mDzGWWTth7sr4aCToKcoyFVBQwN75Ij5Pf6p510EwkTqViTRzDV+w=="],
 
     "enquirer": ["enquirer@2.4.1", "", { "dependencies": { "ansi-colors": "^4.1.1", "strip-ansi": "^6.0.1" } }, "sha512-rRqJg/6gd538VHvR3PSrdRBb/1Vy2YfzHqzvbhGIQpDRKIa4FgV/54b5Q1xYSxOOwKvjXweS26E0Q+nAMwp2pQ=="],
 
@@ -1047,7 +1047,7 @@
 
     "yoctocolors": ["yoctocolors@2.2.0", "", {}, "sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg=="],
 
-    "zod": ["zod@4.6.4", "", {}, "sha512-AXSD6hvGdvRjajG/l1cC+d6IrhH+sjmPKtYeQdJIK8MFJl3LyClzS+o/YsVC+zQZPupAaeH5skwwm8YqYH7BqA=="],
+    "zod": ["zod@4.6.5", "", {}, "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="],
 
     "zod-to-json-schema": ["zod-to-json-schema@3.25.2", "", { "peerDependencies": { "zod": "^3.25.28 || ^4" } }, "sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA=="],
 
@@ -1056,8 +1056,6 @@
     "@babel/helper-compilation-targets/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
     "@babel/helper-create-class-features-plugin/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
-
-    "@better-auth/infra/@better-auth/utils": ["@better-auth/utils@0.4.3", "", { "dependencies": { "@noble/hashes": "^2.0.1" } }, "sha512-/X4gRYJBwRuLFjjANVpTDJJkAhLD6Sf8SIBypQ+Q2kDW1MnCsyxUujJzdKYsp59i4c41+AaMtpY/WQAQumqtOA=="],
 
     "@dotenvx/dotenvx/commander": ["commander@11.1.0", "", {}, "sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ=="],
 

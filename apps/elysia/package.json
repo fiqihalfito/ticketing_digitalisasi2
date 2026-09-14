@@ -1,5 +1,5 @@
 {
-  "name": "@ticketing/elysia",
+  "name": "@ticketing/backend",
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
