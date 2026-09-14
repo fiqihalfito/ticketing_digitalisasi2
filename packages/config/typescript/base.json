@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../../",
+    "paths": {
+      "@api": ["apps/elysia/src/index.ts"]
+    }
+  }
+}

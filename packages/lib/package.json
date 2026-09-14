@@ -1,0 +1,23 @@
+{
+  "name": "@ticketing/lib",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "config": "workspace:*",
+    "@ticketing/elysia": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "7"
+  },
+  "dependencies": {
+    "@elysia/eden": "^1.4.10",
+    "elysia": "catalog:"
+  }
+}

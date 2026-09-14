@@ -1,11 +1,15 @@
 {
   "name": "ticketing-digitalisasi2-monorepo",
   "private": true,
+  "scripts": {
+    "dev": "podman compose -f apps/elysia/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "scripts": {
-    "dev": "podman compose -f apps/elysia/docker-compose.yml up -d && bun run --parallel --filter '*' dev"
+  "catalog": {
+    "elysia": "1.4.30",
+    "@types/bun": "^1.4.1"
   }
 }

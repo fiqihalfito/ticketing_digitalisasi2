@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@ticketing/frontend",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,7 @@
     "@react-router/node": "8.2.0",
     "@react-router/serve": "8.2.0",
     "@remixicon/react": "^4.9.0",
+    "better-auth": "^1.7.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "isbot": "^5.1.36",
@@ -29,7 +30,7 @@
   "devDependencies": {
     "@react-router/dev": "8.2.0",
     "@tailwindcss/vite": "^4.2.2",
-    "@types/bun": "^1.3.14",
+    "@types/bun": "catalog:",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -37,6 +38,8 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
-    "vite": "^8.0.3"
+    "vite": "^8.0.3",
+    "@ticketing/lib": "workspace:*",
+    "@ticketing/elysia": "workspace:*"
   }
 }
