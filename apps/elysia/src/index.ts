@@ -7,7 +7,7 @@ import { cors } from "@elysia/cors"
 const app = new Elysia()
   .use(
     cors({
-      origin: 'http://localhost:5173',
+      origin: Bun.env.FRONTEND_URL!,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization']
