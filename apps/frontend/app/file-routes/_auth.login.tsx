@@ -14,6 +14,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   await authService.signIn(email, password);
 }
 
+// clientLoader return null digunakan agar middleware wajib jalan
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   return null;
 }
