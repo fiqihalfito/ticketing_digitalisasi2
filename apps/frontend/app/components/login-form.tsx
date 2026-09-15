@@ -14,12 +14,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Form } from "react-router";
+import { Form, useFetcher } from "react-router";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  let fetcher = useFetcher();
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -30,7 +32,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form method="post">
+          <fetcher.Form method="post">
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -55,13 +57,15 @@ export function LoginForm({
                 <Input id="password" type="password" name="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={fetcher.state !== "idle"}>
+                  {fetcher.state !== "idle" ? "processing..." : "Login"}
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
-          </Form>
+          </fetcher.Form>
         </CardContent>
       </Card>
     </div>

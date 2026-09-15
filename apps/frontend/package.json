@@ -30,6 +30,8 @@
   "devDependencies": {
     "@react-router/dev": "8.2.0",
     "@tailwindcss/vite": "^4.2.2",
+    "@ticketing/backend": "workspace:*",
+    "@ticketing/lib": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "^22",
     "@types/react": "^19.2.14",
@@ -39,7 +41,6 @@
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.3",
-    "@ticketing/lib": "workspace:*",
-    "@ticketing/backend": "workspace:*"
+    "vite-plugin-devtools-json": "^1.1.0"
   }
 }
