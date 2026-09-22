@@ -9,7 +9,7 @@ import { redisStorage } from "@better-auth/redis-storage";
 const redis = new Redis(Bun.env.REDIS_URL!);
 
 export const auth = betterAuth({
-    trustedOrigins: ["http://localhost:3001", "http://localhost:5173"],
+    trustedOrigins: ["http://localhost:3001", "http://localhost:5173", "http://localhost:3000"],
     database: drizzleAdapter(db, {
         provider: 'pg', // or "pg" or "mysql"
         schema: {
