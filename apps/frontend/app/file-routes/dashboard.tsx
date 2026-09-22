@@ -17,6 +17,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   await authClient.signOut({ callbackURL: "/login" });
 }
 
+// HydrateFallback is rendered while the client loader is running
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
+
 export default function DashboardRoute({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
   let fetcher = useFetcher();
