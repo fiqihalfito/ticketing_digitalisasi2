@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "bun run infra:up && turbo dev",
     "infra:up": "podman compose up -d",
-    "infra:down": "podman compose down"
+    "infra:down": "podman compose down",
+    "build-backend": "podman run --replace --network ticketing_digitalisasi2_default --env-file apps/backend/.env.prod -p 3001:3001 --name elysia-mono-container elysia-mono"
   },
   "workspaces": [
     "apps/*",
