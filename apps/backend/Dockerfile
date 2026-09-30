@@ -2,10 +2,11 @@ FROM oven/bun:1 AS build
 
 WORKDIR /app
 
-# Cache packages
+# Cache packages = root
 COPY package.json package.json
 COPY bun.lock bun.lock
 
+# apps/backend
 COPY /apps/backend/package.json ./apps/backend/package.json
 # COPY /packages/config/package.json ./packages/config/package.json
 
