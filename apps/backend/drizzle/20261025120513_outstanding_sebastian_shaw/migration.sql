@@ -1,0 +1,1 @@
+ALTER TABLE "subfieldsx" RENAME TO "subfields";
