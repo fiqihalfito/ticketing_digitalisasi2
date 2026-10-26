@@ -1,3 +1,6 @@
+-- Current sql file was generated after introspecting the database
+-- If you want to run this migration please uncomment this code before executing migrations
+/*
 CREATE TYPE "priority" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TYPE "role_member" AS ENUM('requester', 'executioner');--> statement-breakpoint
 CREATE TYPE "status" AS ENUM('open', 'in_progress', 'closed');--> statement-breakpoint
@@ -53,7 +56,7 @@ CREATE TABLE "organizations" (
 CREATE TABLE "sessions" (
 	"session_id" uuid PRIMARY KEY DEFAULT uuidv7(),
 	"user_id" uuid NOT NULL,
-	"token" varchar NOT NULL UNIQUE,
+	"token" varchar NOT NULL CONSTRAINT "sessions_token_key" UNIQUE,
 	"expires_at" timestamp(6) with time zone NOT NULL,
 	"ip_address" text,
 	"user_agent" text,
@@ -80,8 +83,9 @@ CREATE TABLE "sub_teams" (
 );
 --> statement-breakpoint
 CREATE TABLE "subfields" (
-	"subfield_id" uuid PRIMARY KEY DEFAULT uuidv7(),
-	"name" varchar(50) NOT NULL
+	"subfield_id" uuid DEFAULT uuidv7(),
+	"name" varchar(50) NOT NULL,
+	CONSTRAINT "subfieldsxxx_pkey" PRIMARY KEY("subfield_id")
 );
 --> statement-breakpoint
 CREATE TABLE "team_leaders" (
@@ -150,7 +154,7 @@ CREATE TABLE "tickets" (
 CREATE TABLE "users" (
 	"user_id" uuid PRIMARY KEY DEFAULT uuidv7(),
 	"name" text NOT NULL,
-	"email" varchar NOT NULL UNIQUE,
+	"email" varchar NOT NULL CONSTRAINT "users_email_key" UNIQUE,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"image" text,
 	"created_at" timestamp(6) with time zone DEFAULT now() NOT NULL,
@@ -183,16 +187,17 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_user_id_fkey" FORE
 ALTER TABLE "sub_departments" ADD CONSTRAINT "sub_departments_departement_id_departements_departement_id_fkey" FOREIGN KEY ("departement_id") REFERENCES "departements"("departement_id");--> statement-breakpoint
 ALTER TABLE "sub_departments" ADD CONSTRAINT "sub_departments_user_id_users_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");--> statement-breakpoint
 ALTER TABLE "sub_teams" ADD CONSTRAINT "sub_teams_team_id_teams_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("team_id");--> statement-breakpoint
-ALTER TABLE "team_leaders" ADD CONSTRAINT "team_leaders_user_id_users_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");--> statement-breakpoint
 ALTER TABLE "team_leaders" ADD CONSTRAINT "team_leaders_team_id_teams_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("team_id");--> statement-breakpoint
-ALTER TABLE "team_members" ADD CONSTRAINT "team_members_user_id_users_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");--> statement-breakpoint
-ALTER TABLE "team_members" ADD CONSTRAINT "team_members_team_id_teams_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("team_id");--> statement-breakpoint
+ALTER TABLE "team_leaders" ADD CONSTRAINT "team_leaders_user_id_users_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");--> statement-breakpoint
 ALTER TABLE "team_members" ADD CONSTRAINT "team_members_sub_team_id_sub_teams_sub_team_id_fkey" FOREIGN KEY ("sub_team_id") REFERENCES "sub_teams"("sub_team_id");--> statement-breakpoint
+ALTER TABLE "team_members" ADD CONSTRAINT "team_members_team_id_teams_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "teams"("team_id");--> statement-breakpoint
+ALTER TABLE "team_members" ADD CONSTRAINT "team_members_user_id_users_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("user_id");--> statement-breakpoint
 ALTER TABLE "teams" ADD CONSTRAINT "teams_sub_department_id_sub_departments_sub_department_id_fkey" FOREIGN KEY ("sub_department_id") REFERENCES "sub_departments"("sub_department_id");--> statement-breakpoint
 ALTER TABLE "ticket_assignments" ADD CONSTRAINT "ticket_assignments_ticket_id_tickets_ticket_id_fkey" FOREIGN KEY ("ticket_id") REFERENCES "tickets"("ticket_id");--> statement-breakpoint
 ALTER TABLE "ticket_assignments" ADD CONSTRAINT "ticket_assignments_vELrAFVQAsuP_fkey" FOREIGN KEY ("assignee_member_id") REFERENCES "team_members"("team_member_id");--> statement-breakpoint
 ALTER TABLE "ticket_chat_attachments" ADD CONSTRAINT "ticket_chat_attachments_kOvTmfWB8DHP_fkey" FOREIGN KEY ("ticket_chat_id") REFERENCES "ticket_chats"("ticket_chat_id");--> statement-breakpoint
-ALTER TABLE "ticket_chats" ADD CONSTRAINT "ticket_chats_ticket_id_tickets_ticket_id_fkey" FOREIGN KEY ("ticket_id") REFERENCES "tickets"("ticket_id");--> statement-breakpoint
 ALTER TABLE "ticket_chats" ADD CONSTRAINT "ticket_chats_team_member_id_team_members_team_member_id_fkey" FOREIGN KEY ("team_member_id") REFERENCES "team_members"("team_member_id");--> statement-breakpoint
-ALTER TABLE "tickets" ADD CONSTRAINT "tickets_requester_member_id_team_members_team_member_id_fkey" FOREIGN KEY ("requester_member_id") REFERENCES "team_members"("team_member_id");--> statement-breakpoint
-ALTER TABLE "tickets" ADD CONSTRAINT "tickets_help_topic_id_help_topics_help_topic_id_fkey" FOREIGN KEY ("help_topic_id") REFERENCES "help_topics"("help_topic_id");
+ALTER TABLE "ticket_chats" ADD CONSTRAINT "ticket_chats_ticket_id_tickets_ticket_id_fkey" FOREIGN KEY ("ticket_id") REFERENCES "tickets"("ticket_id");--> statement-breakpoint
+ALTER TABLE "tickets" ADD CONSTRAINT "tickets_help_topic_id_help_topics_help_topic_id_fkey" FOREIGN KEY ("help_topic_id") REFERENCES "help_topics"("help_topic_id");--> statement-breakpoint
+ALTER TABLE "tickets" ADD CONSTRAINT "tickets_requester_member_id_team_members_team_member_id_fkey" FOREIGN KEY ("requester_member_id") REFERENCES "team_members"("team_member_id");
+*/

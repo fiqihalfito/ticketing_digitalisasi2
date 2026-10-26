@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "8aa2c580-009d-4410-891e-67e77ab8f2e4",
+  "id": "516b9829-b9e9-436b-ac27-82bc040df9cb",
   "prevIds": [
-    "bc4ce4fa-9f67-401d-9c05-c03bb3320073"
+    "429d5a68-ce98-463d-8131-44d982d1dcdc"
   ],
   "ddl": [
     {
@@ -85,7 +85,7 @@
     },
     {
       "isRlsEnabled": false,
-      "name": "subfields",
+      "name": "subfieldsnnn",
       "entityType": "tables",
       "schema": "public"
     },
@@ -856,7 +856,7 @@
       "name": "subfield_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "subfields"
+      "table": "subfieldsnnn"
     },
     {
       "type": "varchar(50)",
@@ -869,7 +869,7 @@
       "name": "name",
       "entityType": "columns",
       "schema": "public",
-      "table": "subfields"
+      "table": "subfieldsnnn"
     },
     {
       "type": "uuid",
@@ -2190,7 +2190,7 @@
       "nameExplicit": false,
       "name": "subfields_pkey",
       "schema": "public",
-      "table": "subfields",
+      "table": "subfieldsnnn",
       "entityType": "pks"
     },
     {
@@ -2307,6 +2307,6 @@
     }
   ],
   "renames": [
-    "public.subfieldsx->public.subfields"
+    "public.subfields->public.subfieldsnnn"
   ]
 }

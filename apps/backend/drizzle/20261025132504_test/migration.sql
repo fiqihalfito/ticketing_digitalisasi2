@@ -1,0 +1,1 @@
+ALTER TABLE "subfields" RENAME CONSTRAINT "subfieldsxxx_pkey" TO "subfields_pkey";

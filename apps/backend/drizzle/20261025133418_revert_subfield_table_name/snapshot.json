@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "a17b8ec6-0495-484a-9954-05a708efb34d",
+  "id": "7377f2ef-0697-49e7-9c21-55f4d6685e9e",
   "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
+    "516b9829-b9e9-436b-ac27-82bc040df9cb"
   ],
   "ddl": [
     {
@@ -2306,5 +2306,7 @@
       "entityType": "uniques"
     }
   ],
-  "renames": []
+  "renames": [
+    "public.subfieldsnnn->public.subfields"
+  ]
 }
