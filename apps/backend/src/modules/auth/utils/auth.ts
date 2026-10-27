@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { openAPI } from 'better-auth/plugins'
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 import { db } from "@/database/connect";
-import * as schema from "@/database/schema-old";
+import * as schema from "@/database/schema";
 import { Redis } from "ioredis";
 import { redisStorage } from "@better-auth/redis-storage";
 
@@ -13,11 +13,10 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: 'pg', // or "pg" or "mysql"
         schema: {
-            ...schema,
-            user: schema.usersTable,
-            account: schema.accountsTable,
-            session: schema.sessionsTable,
-            verification: schema.verificationsTable,
+            user: schema.authUsersTable,
+            account: schema.authAccountsTable,
+            session: schema.authSessionsTable,
+            verification: schema.authVerificationsTable,
         },
     }),
     advanced: {
@@ -31,6 +30,9 @@ export const auth = betterAuth({
         keyPrefix: "better-auth:", // optional, defaults to "better-auth:"
     }),
     session: {
+        fields: {
+            userId: "authUserId"
+        },
         expiresIn: 60 * 60 * 24 * 7, // 7 days
         updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)
         cookieCache: {
@@ -40,6 +42,7 @@ export const auth = betterAuth({
     },
     account: {
         fields: {
+            userId: "authUserId",
             accountId: "providerAccountId"
         }
     },
