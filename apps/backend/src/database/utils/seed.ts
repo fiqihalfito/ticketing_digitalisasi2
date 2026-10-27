@@ -12,7 +12,7 @@ import {
     teamMembersTable,
     teamsTable,
     usersTable,
-} from "../schema";
+} from "../schema-old";
 import { truncateAll } from "./truncate-data";
 
 const authClient = createAuthClient({

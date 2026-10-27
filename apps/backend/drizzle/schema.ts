@@ -1,14 +1,14 @@
-import { pgEnum, pgTable, uuid, varchar, text, timestamp, jsonb, boolean, uniqueIndex, index, foreignKey, primaryKey, unique } from "drizzle-orm/pg-core"
+import { pgEnum, pgTable, uuid, text, varchar, timestamp, boolean, jsonb, index, uniqueIndex, foreignKey, primaryKey, unique } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-export const priority = pgEnum("priority", ["low", "medium", "high"])
-export const roleMember = pgEnum("role_member", ["requester", "executioner"])
-export const status = pgEnum("status", ["open", "in_progress", "closed"])
+export const orgRoleMember = pgEnum("org_role_member", ["requester", "executioner"])
+export const ticketPriority = pgEnum("ticket_priority", ["low", "medium", "high"])
+export const ticketStatus = pgEnum("ticket_status", ["open", "in_progress", "closed"])
 
 
-export const accounts = pgTable("accounts", {
-	accountId: uuid("account_id").default(sql`uuidv7()`).primaryKey(),
-	userId: uuid("user_id").notNull().references(() => users.userId, { onDelete: "cascade" } ),
+export const authAccounts = pgTable("auth_accounts", {
+	authAccountId: uuid("auth_account_id").default(sql`uuidv7()`).primaryKey(),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId, { onDelete: "cascade" } ),
 	issuer: text(),
 	providerAccountId: text("provider_account_id"),
 	providerId: text("provider_id").notNull(),
@@ -22,45 +22,13 @@ export const accounts = pgTable("accounts", {
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 }, (table) => [
-	uniqueIndex("accountsTable_issuer_providerAccountId_uidx").using("btree", table.issuer.asc().nullsLast(), table.providerAccountId.asc().nullsLast()),
-	index("accountsTable_userId_idx").using("btree", table.userId.asc().nullsLast()),
+	index("authAccountsTable_authUserId_idx").using("btree", table.authUserId.asc().nullsLast()),
+	uniqueIndex("authAccountsTable_issuer_providerAccountId_uidx").using("btree", table.issuer.asc().nullsLast(), table.providerAccountId.asc().nullsLast()),
 ]);
 
-export const applicationServices = pgTable("application_services", {
-	applicationServiceId: uuid("application_service_id").default(sql`uuidv7()`).primaryKey(),
-	subDepartmentId: uuid("sub_department_id").notNull().references(() => subDepartments.subDepartmentId),
-	name: text().notNull(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const departements = pgTable("departements", {
-	departementId: uuid("departement_id").default(sql`uuidv7()`).primaryKey(),
-	organizationId: uuid("organization_id").notNull().references(() => organizations.organizationId),
-	name: text().notNull(),
-	userId: uuid("user_id").notNull().references(() => users.userId),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const helpTopics = pgTable("help_topics", {
-	helpTopicId: uuid("help_topic_id").default(sql`uuidv7()`).primaryKey(),
-	applicationServiceId: uuid("application_service_id").notNull().references(() => applicationServices.applicationServiceId),
-	title: text().notNull(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const organizations = pgTable("organizations", {
-	organizationId: uuid("organization_id").default(sql`uuidv7()`).primaryKey(),
-	name: text().notNull(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const sessions = pgTable("sessions", {
-	sessionId: uuid("session_id").default(sql`uuidv7()`).primaryKey(),
-	userId: uuid("user_id").notNull().references(() => users.userId, { onDelete: "cascade" } ),
+export const authSessions = pgTable("auth_sessions", {
+	authSessionId: uuid("auth_session_id").default(sql`uuidv7()`).primaryKey(),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId, { onDelete: "cascade" } ),
 	token: varchar().notNull(),
 	expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
 	ipAddress: text("ip_address"),
@@ -69,54 +37,105 @@ export const sessions = pgTable("sessions", {
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 }, (table) => [
-	index("sessionsTable_userId_idx").using("btree", table.userId.asc().nullsLast()),
-	unique("sessions_token_key").on(table.token),]);
+	index("authSessionsTable_authUserId_idx").using("btree", table.authUserId.asc().nullsLast()),
+	unique("auth_sessions_token_key").on(table.token),]);
 
-export const subDepartments = pgTable("sub_departments", {
-	subDepartmentId: uuid("sub_department_id").default(sql`uuidv7()`).primaryKey(),
+export const authUsers = pgTable("auth_users", {
+	authUserId: uuid("auth_user_id").default(sql`uuidv7()`).primaryKey(),
 	name: text().notNull(),
-	departementId: uuid("departement_id").notNull().references(() => departements.departementId),
-	userId: uuid("user_id").notNull().references(() => users.userId),
+	email: varchar().notNull(),
+	emailVerified: boolean("email_verified").default(false).notNull(),
+	image: text(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const subTeams = pgTable("sub_teams", {
-	subTeamId: uuid("sub_team_id").default(sql`uuidv7()`).primaryKey(),
-	teamId: uuid("team_id").notNull().references(() => teams.teamId),
-	name: text().notNull(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-});
-
-export const subfields = pgTable("subfields", {
-	subfieldId: uuid("subfield_id").default(sql`uuidv7()`).notNull(),
-	name: varchar({ length: 50 }).notNull(),
+	role: text(),
+	banned: boolean().default(false),
+	banReason: text("ban_reason"),
+	banExpires: timestamp("ban_expires", { precision: 6, withTimezone: true }),
 }, (table) => [
-	primaryKey({ columns: [table.subfieldId], name: "subfieldsxxx_pkey"}),
+	unique("auth_users_email_key").on(table.email),]);
+
+export const authVerifications = pgTable("auth_verifications", {
+	authVerificationId: uuid("auth_verification_id").default(sql`uuidv7()`).primaryKey(),
+	identifier: text().notNull(),
+	value: text().notNull(),
+	expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+}, (table) => [
+	index("authVerificationsTable_identifier_idx").using("btree", table.identifier.asc().nullsLast()),
 ]);
 
-export const teamLeaders = pgTable("team_leaders", {
-	teamLeaderId: uuid("team_leader_id").default(sql`uuidv7()`).primaryKey(),
-	userId: uuid("user_id").notNull().references(() => users.userId),
-	teamId: uuid("team_id").notNull().references(() => teams.teamId),
+export const catalogApplicationServices = pgTable("catalog_application_services", {
+	catalogApplicationServiceId: uuid("catalog_application_service_id").default(sql`uuidv7()`).primaryKey(),
+	orgSubDepartmentId: uuid("org_sub_department_id").notNull().references(() => orgSubDepartments.orgSubDepartmentId),
+	name: text().notNull(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 });
 
-export const teamMembers = pgTable("team_members", {
-	teamMemberId: uuid("team_member_id").default(sql`uuidv7()`).primaryKey(),
-	userId: uuid("user_id").notNull().references(() => users.userId),
-	teamId: uuid("team_id").notNull().references(() => teams.teamId),
-	subTeamId: uuid("sub_team_id").references(() => subTeams.subTeamId),
-	roleMember: roleMember(),
+export const catalogHelpTopics = pgTable("catalog_help_topics", {
+	catalogHelpTopicId: uuid("catalog_help_topic_id").default(sql`uuidv7()`).primaryKey(),
+	catalogApplicationServiceId: uuid("catalog_application_service_id").notNull().references(() => catalogApplicationServices.catalogApplicationServiceId),
+	title: text().notNull(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 });
 
-export const teams = pgTable("teams", {
-	teamId: uuid("team_id").default(sql`uuidv7()`).primaryKey(),
-	subDepartmentId: uuid("sub_department_id").notNull().references(() => subDepartments.subDepartmentId),
+export const orgDepartements = pgTable("org_departements", {
+	orgDepartementId: uuid("org_departement_id").default(sql`uuidv7()`).primaryKey(),
+	orgOrganizationId: uuid("org_organization_id").notNull().references(() => orgOrganizations.orgOrganizationId),
+	name: text().notNull(),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgOrganizations = pgTable("org_organizations", {
+	orgOrganizationId: uuid("org_organization_id").default(sql`uuidv7()`).primaryKey(),
+	name: text().notNull(),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgSubDepartments = pgTable("org_sub_departments", {
+	orgSubDepartmentId: uuid("org_sub_department_id").default(sql`uuidv7()`).primaryKey(),
+	name: text().notNull(),
+	orgDepartementId: uuid("org_departement_id").notNull().references(() => orgDepartements.orgDepartementId),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgSubTeams = pgTable("org_sub_teams", {
+	orgSubTeamId: uuid("org_sub_team_id").default(sql`uuidv7()`).primaryKey(),
+	orgTeamId: uuid("org_team_id").notNull().references(() => orgTeams.orgTeamId),
+	name: text().notNull(),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgTeamLeaders = pgTable("org_team_leaders", {
+	orgTeamLeaderId: uuid("org_team_leader_id").default(sql`uuidv7()`).primaryKey(),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId),
+	orgTeamId: uuid("org_team_id").notNull().references(() => orgTeams.orgTeamId),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgTeamMembers = pgTable("org_team_members", {
+	orgTeamMemberId: uuid("org_team_member_id").default(sql`uuidv7()`).primaryKey(),
+	authUserId: uuid("auth_user_id").notNull().references(() => authUsers.authUserId),
+	orgTeamId: uuid("org_team_id").notNull().references(() => orgTeams.orgTeamId),
+	orgSubTeamId: uuid("org_sub_team_id").references(() => orgSubTeams.orgSubTeamId),
+	roleMember: orgRoleMember(),
+	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
+});
+
+export const orgTeams = pgTable("org_teams", {
+	orgTeamId: uuid("org_team_id").default(sql`uuidv7()`).primaryKey(),
+	orgSubDepartmentId: uuid("org_sub_department_id").notNull().references(() => orgSubDepartments.orgSubDepartmentId),
 	name: text().notNull(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
@@ -125,7 +144,7 @@ export const teams = pgTable("teams", {
 export const ticketAssignments = pgTable("ticket_assignments", {
 	ticketAssignmentId: uuid("ticket_assignment_id").default(sql`uuidv7()`).primaryKey(),
 	ticketId: uuid("ticket_id").notNull().references(() => tickets.ticketId),
-	assigneeMemberId: uuid("assignee_member_id").notNull().references(() => teamMembers.teamMemberId),
+	assigneeMemberId: uuid("assignee_member_id").notNull().references(() => orgTeamMembers.orgTeamMemberId),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 });
@@ -142,7 +161,7 @@ export const ticketChatAttachments = pgTable("ticket_chat_attachments", {
 export const ticketChats = pgTable("ticket_chats", {
 	ticketChatId: uuid("ticket_chat_id").default(sql`uuidv7()`).primaryKey(),
 	ticketId: uuid("ticket_id").notNull().references(() => tickets.ticketId),
-	teamMemberId: uuid("team_member_id").notNull().references(() => teamMembers.teamMemberId),
+	orgTeamMemberId: uuid("org_team_member_id").notNull().references(() => orgTeamMembers.orgTeamMemberId),
 	bodyChat: jsonb("body_chat").notNull(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
@@ -150,37 +169,11 @@ export const ticketChats = pgTable("ticket_chats", {
 
 export const tickets = pgTable("tickets", {
 	ticketId: uuid("ticket_id").default(sql`uuidv7()`).primaryKey(),
-	requesterMemberId: uuid("requester_member_id").notNull().references(() => teamMembers.teamMemberId),
-	helpTopicId: uuid("help_topic_id").notNull().references(() => helpTopics.helpTopicId),
-	status: status().default("open").notNull(),
-	priority: priority().default("medium").notNull(),
+	orgTeamMemberId: uuid("org_team_member_id").notNull().references(() => orgTeamMembers.orgTeamMemberId),
+	catalogHelpTopicId: uuid("catalog_help_topic_id").notNull().references(() => catalogHelpTopics.catalogHelpTopicId),
+	status: ticketStatus().default("open").notNull(),
+	priority: ticketPriority().default("medium").notNull(),
 	title: text().notNull(),
 	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
 });
-
-export const users = pgTable("users", {
-	userId: uuid("user_id").default(sql`uuidv7()`).primaryKey(),
-	name: text().notNull(),
-	email: varchar().notNull(),
-	emailVerified: boolean("email_verified").default(false).notNull(),
-	image: text(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	role: text(),
-	banned: boolean().default(false),
-	banReason: text("ban_reason"),
-	banExpires: timestamp("ban_expires", { precision: 6, withTimezone: true }),
-}, (table) => [
-	unique("users_email_key").on(table.email),]);
-
-export const verifications = pgTable("verifications", {
-	verificationId: uuid("verification_id").default(sql`uuidv7()`).primaryKey(),
-	identifier: text().notNull(),
-	value: text().notNull(),
-	expiresAt: timestamp("expires_at", { precision: 6, withTimezone: true }).notNull(),
-	createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-	updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).default(sql`now()`).notNull(),
-}, (table) => [
-	index("verificationsTable_identifier_idx").using("btree", table.identifier.asc().nullsLast()),
-]);

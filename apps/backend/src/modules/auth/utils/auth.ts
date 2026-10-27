@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { openAPI } from 'better-auth/plugins'
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 import { db } from "@/database/connect";
-import * as schema from "@/database/schema";
+import * as schema from "@/database/schema-old";
 import { Redis } from "ioredis";
 import { redisStorage } from "@better-auth/redis-storage";
 

@@ -5,6 +5,7 @@ export default defineConfig({
         url: Bun.env.DATABASE_URL!,
     },
     dialect: "postgresql",
-    schema: "./src/database/schema.ts",
+    schema: "./src/database/schema/index.ts",
+    schemaFilter: ["public"]
 
 });

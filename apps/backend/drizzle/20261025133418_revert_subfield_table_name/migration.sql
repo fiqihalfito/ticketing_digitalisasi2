@@ -1,1 +1,0 @@
-ALTER TABLE "subfieldsnnn" RENAME TO "subfields";

@@ -1,27 +1,27 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "516b9829-b9e9-436b-ac27-82bc040df9cb",
+  "id": "4fb15484-309c-4bcb-a875-8130179c5244",
   "prevIds": [
-    "429d5a68-ce98-463d-8131-44d982d1dcdc"
+    "ad254d50-6070-434e-b25e-30c438689934"
   ],
   "ddl": [
+    {
+      "values": [
+        "requester",
+        "executioner"
+      ],
+      "name": "org_role_member",
+      "entityType": "enums",
+      "schema": "public"
+    },
     {
       "values": [
         "low",
         "medium",
         "high"
       ],
-      "name": "priority",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "requester",
-        "executioner"
-      ],
-      "name": "role_member",
+      "name": "ticket_priority",
       "entityType": "enums",
       "schema": "public"
     },
@@ -31,79 +31,85 @@
         "in_progress",
         "closed"
       ],
-      "name": "status",
+      "name": "ticket_status",
       "entityType": "enums",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "accounts",
+      "name": "auth_accounts",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "application_services",
+      "name": "auth_sessions",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "departements",
+      "name": "auth_users",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "help_topics",
+      "name": "auth_verifications",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "organizations",
+      "name": "catalog_application_services",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "sessions",
+      "name": "catalog_help_topics",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "sub_departments",
+      "name": "org_departements",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "sub_teams",
+      "name": "org_organizations",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "subfieldsnnn",
+      "name": "org_sub_departments",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "team_leaders",
+      "name": "org_sub_teams",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "team_members",
+      "name": "org_team_leaders",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "teams",
+      "name": "org_team_members",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "org_teams",
       "entityType": "tables",
       "schema": "public"
     },
@@ -132,18 +138,6 @@
       "schema": "public"
     },
     {
-      "isRlsEnabled": false,
-      "name": "users",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "verifications",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -151,10 +145,10 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "account_id",
+      "name": "auth_account_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "uuid",
@@ -164,10 +158,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
+      "name": "auth_user_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -180,7 +174,7 @@
       "name": "issuer",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -193,7 +187,7 @@
       "name": "provider_account_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -206,7 +200,7 @@
       "name": "provider_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -219,7 +213,7 @@
       "name": "access_token",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -232,7 +226,7 @@
       "name": "refresh_token",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -245,7 +239,7 @@
       "name": "access_token_expires_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -258,7 +252,7 @@
       "name": "refresh_token_expires_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -271,7 +265,7 @@
       "name": "scope",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -284,7 +278,7 @@
       "name": "id_token",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "text",
@@ -297,7 +291,7 @@
       "name": "password",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -310,7 +304,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -323,7 +317,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "type": "uuid",
@@ -333,10 +327,10 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "application_service_id",
+      "name": "auth_session_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "application_services"
+      "table": "auth_sessions"
     },
     {
       "type": "uuid",
@@ -346,270 +340,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "sub_department_id",
+      "name": "auth_user_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "application_services"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_services"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_services"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_services"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "departement_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "organization_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "help_topic_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "application_service_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "title",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "organization_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "organizations"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "organizations"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "organizations"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "organizations"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "session_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "varchar",
@@ -622,7 +356,7 @@
       "name": "token",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -635,7 +369,7 @@
       "name": "expires_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "text",
@@ -648,7 +382,7 @@
       "name": "ip_address",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "text",
@@ -661,7 +395,7 @@
       "name": "user_agent",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "text",
@@ -674,7 +408,7 @@
       "name": "impersonated_by",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -687,7 +421,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -700,7 +434,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "type": "uuid",
@@ -710,10 +444,10 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "sub_department_id",
+      "name": "auth_user_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
     },
     {
       "type": "text",
@@ -726,33 +460,46 @@
       "name": "name",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
     },
     {
-      "type": "uuid",
+      "type": "varchar",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "departement_id",
+      "name": "email",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
     },
     {
-      "type": "uuid",
+      "type": "boolean",
       "typeSchema": null,
       "notNull": true,
+      "dimensions": 0,
+      "default": "false",
+      "generated": null,
+      "identity": null,
+      "name": "email_verified",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_users"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
+      "name": "image",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -765,7 +512,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -778,7 +525,59 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "auth_users"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "role",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_users"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "false",
+      "generated": null,
+      "identity": null,
+      "name": "banned",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_users"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ban_reason",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_users"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ban_expires",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_users"
     },
     {
       "type": "uuid",
@@ -788,10 +587,88 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "sub_team_id",
+      "name": "auth_verification_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "auth_verifications"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "identifier",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_verifications"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "value",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_verifications"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "expires_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_verifications"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_verifications"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "auth_verifications"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "catalog_application_service_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "catalog_application_services"
     },
     {
       "type": "uuid",
@@ -801,10 +678,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "team_id",
+      "name": "org_sub_department_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "catalog_application_services"
     },
     {
       "type": "text",
@@ -817,7 +694,7 @@
       "name": "name",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "catalog_application_services"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -830,7 +707,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "catalog_application_services"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -843,7 +720,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "catalog_application_services"
     },
     {
       "type": "uuid",
@@ -853,13 +730,91 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "subfield_id",
+      "name": "catalog_help_topic_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "subfieldsnnn"
+      "table": "catalog_help_topics"
     },
     {
-      "type": "varchar(50)",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "catalog_application_service_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "catalog_help_topics"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "title",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "catalog_help_topics"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "catalog_help_topics"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "catalog_help_topics"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "org_departement_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_departements"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "org_organization_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_departements"
+    },
+    {
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -869,20 +824,7 @@
       "name": "name",
       "entityType": "columns",
       "schema": "public",
-      "table": "subfieldsnnn"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "team_leader_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "team_leaders"
+      "table": "org_departements"
     },
     {
       "type": "uuid",
@@ -892,23 +834,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
+      "name": "auth_user_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_leaders"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "team_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "team_leaders"
+      "table": "org_departements"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -921,7 +850,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_leaders"
+      "table": "org_departements"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -934,7 +863,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_leaders"
+      "table": "org_departements"
     },
     {
       "type": "uuid",
@@ -944,10 +873,75 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "team_member_id",
+      "name": "org_organization_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_organizations"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_organizations"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_organizations"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_organizations"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "org_sub_department_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_departments"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_departments"
     },
     {
       "type": "uuid",
@@ -957,10 +951,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
+      "name": "org_departement_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_sub_departments"
     },
     {
       "type": "uuid",
@@ -970,10 +964,205 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "team_id",
+      "name": "auth_user_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_sub_departments"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_departments"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_departments"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "org_sub_team_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_teams"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "org_team_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_teams"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_teams"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_teams"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_sub_teams"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "org_team_leader_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_leaders"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "auth_user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_leaders"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "org_team_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_leaders"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_leaders"
+    },
+    {
+      "type": "timestamp(6) with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_leaders"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "uuidv7()",
+      "generated": null,
+      "identity": null,
+      "name": "org_team_member_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_members"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "auth_user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_members"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "org_team_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "org_team_members"
     },
     {
       "type": "uuid",
@@ -983,13 +1172,13 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "sub_team_id",
+      "name": "org_sub_team_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_team_members"
     },
     {
-      "type": "role_member",
+      "type": "org_role_member",
       "typeSchema": "public",
       "notNull": false,
       "dimensions": 0,
@@ -999,7 +1188,7 @@
       "name": "roleMember",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_team_members"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -1012,7 +1201,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_team_members"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -1025,7 +1214,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_team_members"
     },
     {
       "type": "uuid",
@@ -1035,10 +1224,10 @@
       "default": "uuidv7()",
       "generated": null,
       "identity": null,
-      "name": "team_id",
+      "name": "org_team_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "teams"
+      "table": "org_teams"
     },
     {
       "type": "uuid",
@@ -1048,10 +1237,10 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "sub_department_id",
+      "name": "org_sub_department_id",
       "entityType": "columns",
       "schema": "public",
-      "table": "teams"
+      "table": "org_teams"
     },
     {
       "type": "text",
@@ -1064,7 +1253,7 @@
       "name": "name",
       "entityType": "columns",
       "schema": "public",
-      "table": "teams"
+      "table": "org_teams"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -1077,7 +1266,7 @@
       "name": "created_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "teams"
+      "table": "org_teams"
     },
     {
       "type": "timestamp(6) with time zone",
@@ -1090,7 +1279,7 @@
       "name": "updated_at",
       "entityType": "columns",
       "schema": "public",
-      "table": "teams"
+      "table": "org_teams"
     },
     {
       "type": "uuid",
@@ -1269,7 +1458,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "team_member_id",
+      "name": "org_team_member_id",
       "entityType": "columns",
       "schema": "public",
       "table": "ticket_chats"
@@ -1334,7 +1523,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "requester_member_id",
+      "name": "org_team_member_id",
       "entityType": "columns",
       "schema": "public",
       "table": "tickets"
@@ -1347,13 +1536,13 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "help_topic_id",
+      "name": "catalog_help_topic_id",
       "entityType": "columns",
       "schema": "public",
       "table": "tickets"
     },
     {
-      "type": "status",
+      "type": "ticket_status",
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
@@ -1366,7 +1555,7 @@
       "table": "tickets"
     },
     {
-      "type": "priority",
+      "type": "ticket_priority",
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
@@ -1418,227 +1607,6 @@
       "table": "tickets"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "varchar",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "email",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "email_verified",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "image",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "role",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "banned",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "ban_reason",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "ban_expires",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "uuidv7()",
-      "generated": null,
-      "identity": null,
-      "name": "verification_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "identifier",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "value",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
-      "type": "timestamp(6) with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verifications"
-    },
-    {
       "nameExplicit": true,
       "columns": [
         {
@@ -1661,16 +1629,16 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "accountsTable_issuer_providerAccountId_uidx",
+      "name": "authAccountsTable_issuer_providerAccountId_uidx",
       "entityType": "indexes",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "nameExplicit": true,
       "columns": [
         {
-          "value": "user_id",
+          "value": "auth_user_id",
           "isExpression": false,
           "asc": true,
           "nullsFirst": false,
@@ -1682,16 +1650,16 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "accountsTable_userId_idx",
+      "name": "authAccountsTable_authUserId_idx",
       "entityType": "indexes",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "nameExplicit": true,
       "columns": [
         {
-          "value": "user_id",
+          "value": "auth_user_id",
           "isExpression": false,
           "asc": true,
           "nullsFirst": false,
@@ -1703,10 +1671,10 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "sessionsTable_userId_idx",
+      "name": "authSessionsTable_authUserId_idx",
       "entityType": "indexes",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "nameExplicit": true,
@@ -1724,265 +1692,265 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "verificationsTable_identifier_idx",
+      "name": "authVerificationsTable_identifier_idx",
       "entityType": "indexes",
       "schema": "public",
-      "table": "verifications"
+      "table": "auth_verifications"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "user_id"
+        "auth_user_id"
       ],
       "schemaTo": "public",
-      "tableTo": "users",
+      "tableTo": "auth_users",
       "columnsTo": [
-        "user_id"
+        "auth_user_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
-      "name": "accounts_user_id_users_user_id_fkey",
+      "name": "auth_accounts_auth_user_id_auth_users_auth_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "accounts"
+      "table": "auth_accounts"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "sub_department_id"
+        "auth_user_id"
       ],
       "schemaTo": "public",
-      "tableTo": "sub_departments",
+      "tableTo": "auth_users",
       "columnsTo": [
-        "sub_department_id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "application_services_UCklrcvxOmvi_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "application_services"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "organization_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "organizations",
-      "columnsTo": [
-        "organization_id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "departements_organization_id_organizations_organization_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": [
-        "user_id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "departements_user_id_users_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "departements"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "application_service_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "application_services",
-      "columnsTo": [
-        "application_service_id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "help_topics_1tnbRcHVjfiQ_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "help_topics"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": [
-        "user_id"
+        "auth_user_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
-      "name": "sessions_user_id_users_user_id_fkey",
+      "name": "auth_sessions_auth_user_id_auth_users_auth_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "sessions"
+      "table": "auth_sessions"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "departement_id"
+        "org_sub_department_id"
       ],
       "schemaTo": "public",
-      "tableTo": "departements",
+      "tableTo": "org_sub_departments",
       "columnsTo": [
-        "departement_id"
+        "org_sub_department_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "sub_departments_departement_id_departements_departement_id_fkey",
+      "name": "catalog_application_services_PqLuwJxOgjMD_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "catalog_application_services"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "user_id"
+        "catalog_application_service_id"
       ],
       "schemaTo": "public",
-      "tableTo": "users",
+      "tableTo": "catalog_application_services",
       "columnsTo": [
-        "user_id"
+        "catalog_application_service_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "sub_departments_user_id_users_user_id_fkey",
+      "name": "catalog_help_topics_XZAy83POOs5K_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "sub_departments"
+      "table": "catalog_help_topics"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "team_id"
+        "org_organization_id"
       ],
       "schemaTo": "public",
-      "tableTo": "teams",
+      "tableTo": "org_organizations",
       "columnsTo": [
-        "team_id"
+        "org_organization_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "sub_teams_team_id_teams_team_id_fkey",
+      "name": "org_departements_RRM1CzvzrQmp_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "sub_teams"
+      "table": "org_departements"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "user_id"
+        "auth_user_id"
       ],
       "schemaTo": "public",
-      "tableTo": "users",
+      "tableTo": "auth_users",
       "columnsTo": [
-        "user_id"
+        "auth_user_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "team_leaders_user_id_users_user_id_fkey",
+      "name": "org_departements_auth_user_id_auth_users_auth_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "team_leaders"
+      "table": "org_departements"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "team_id"
+        "org_departement_id"
       ],
       "schemaTo": "public",
-      "tableTo": "teams",
+      "tableTo": "org_departements",
       "columnsTo": [
-        "team_id"
+        "org_departement_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "team_leaders_team_id_teams_team_id_fkey",
+      "name": "org_sub_departments_i3hBfLJbIQVP_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "team_leaders"
+      "table": "org_sub_departments"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "user_id"
+        "auth_user_id"
       ],
       "schemaTo": "public",
-      "tableTo": "users",
+      "tableTo": "auth_users",
       "columnsTo": [
-        "user_id"
+        "auth_user_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "team_members_user_id_users_user_id_fkey",
+      "name": "org_sub_departments_auth_user_id_auth_users_auth_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_sub_departments"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "team_id"
+        "org_team_id"
       ],
       "schemaTo": "public",
-      "tableTo": "teams",
+      "tableTo": "org_teams",
       "columnsTo": [
-        "team_id"
+        "org_team_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "team_members_team_id_teams_team_id_fkey",
+      "name": "org_sub_teams_org_team_id_org_teams_org_team_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_sub_teams"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "sub_team_id"
+        "auth_user_id"
       ],
       "schemaTo": "public",
-      "tableTo": "sub_teams",
+      "tableTo": "auth_users",
       "columnsTo": [
-        "sub_team_id"
+        "auth_user_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "team_members_sub_team_id_sub_teams_sub_team_id_fkey",
+      "name": "org_team_leaders_auth_user_id_auth_users_auth_user_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "team_members"
+      "table": "org_team_leaders"
     },
     {
       "nameExplicit": false,
       "columns": [
-        "sub_department_id"
+        "org_team_id"
       ],
       "schemaTo": "public",
-      "tableTo": "sub_departments",
+      "tableTo": "org_teams",
       "columnsTo": [
-        "sub_department_id"
+        "org_team_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "teams_sub_department_id_sub_departments_sub_department_id_fkey",
+      "name": "org_team_leaders_org_team_id_org_teams_org_team_id_fkey",
       "entityType": "fks",
       "schema": "public",
-      "table": "teams"
+      "table": "org_team_leaders"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "auth_user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "auth_users",
+      "columnsTo": [
+        "auth_user_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "org_team_members_auth_user_id_auth_users_auth_user_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "org_team_members"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "org_team_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "org_teams",
+      "columnsTo": [
+        "org_team_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "org_team_members_org_team_id_org_teams_org_team_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "org_team_members"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "org_sub_team_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "org_sub_teams",
+      "columnsTo": [
+        "org_sub_team_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "org_team_members_NAWZK6MUdax1_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "org_team_members"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "org_sub_department_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "org_sub_departments",
+      "columnsTo": [
+        "org_sub_department_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "org_teams_aaAgQsFcISyz_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "org_teams"
     },
     {
       "nameExplicit": false,
@@ -2007,13 +1975,13 @@
         "assignee_member_id"
       ],
       "schemaTo": "public",
-      "tableTo": "team_members",
+      "tableTo": "org_team_members",
       "columnsTo": [
-        "team_member_id"
+        "org_team_member_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "ticket_assignments_vELrAFVQAsuP_fkey",
+      "name": "ticket_assignments_lECbDc4n0w6B_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "ticket_assignments"
@@ -2055,16 +2023,16 @@
     {
       "nameExplicit": false,
       "columns": [
-        "team_member_id"
+        "org_team_member_id"
       ],
       "schemaTo": "public",
-      "tableTo": "team_members",
+      "tableTo": "org_team_members",
       "columnsTo": [
-        "team_member_id"
+        "org_team_member_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "ticket_chats_team_member_id_team_members_team_member_id_fkey",
+      "name": "ticket_chats_hlxF7VTT4q0H_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "ticket_chats"
@@ -2072,16 +2040,16 @@
     {
       "nameExplicit": false,
       "columns": [
-        "requester_member_id"
+        "org_team_member_id"
       ],
       "schemaTo": "public",
-      "tableTo": "team_members",
+      "tableTo": "org_team_members",
       "columnsTo": [
-        "team_member_id"
+        "org_team_member_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "tickets_requester_member_id_team_members_team_member_id_fkey",
+      "name": "tickets_zuUt3srZKjYM_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "tickets"
@@ -2089,138 +2057,148 @@
     {
       "nameExplicit": false,
       "columns": [
-        "help_topic_id"
+        "catalog_help_topic_id"
       ],
       "schemaTo": "public",
-      "tableTo": "help_topics",
+      "tableTo": "catalog_help_topics",
       "columnsTo": [
-        "help_topic_id"
+        "catalog_help_topic_id"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "tickets_help_topic_id_help_topics_help_topic_id_fkey",
+      "name": "tickets_xM6KSApB8pGg_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "tickets"
     },
     {
       "columns": [
-        "account_id"
+        "auth_account_id"
       ],
       "nameExplicit": false,
-      "name": "accounts_pkey",
+      "name": "auth_accounts_pkey",
       "schema": "public",
-      "table": "accounts",
+      "table": "auth_accounts",
       "entityType": "pks"
     },
     {
       "columns": [
-        "application_service_id"
+        "auth_session_id"
       ],
       "nameExplicit": false,
-      "name": "application_services_pkey",
+      "name": "auth_sessions_pkey",
       "schema": "public",
-      "table": "application_services",
+      "table": "auth_sessions",
       "entityType": "pks"
     },
     {
       "columns": [
-        "departement_id"
+        "auth_user_id"
       ],
       "nameExplicit": false,
-      "name": "departements_pkey",
+      "name": "auth_users_pkey",
       "schema": "public",
-      "table": "departements",
+      "table": "auth_users",
       "entityType": "pks"
     },
     {
       "columns": [
-        "help_topic_id"
+        "auth_verification_id"
       ],
       "nameExplicit": false,
-      "name": "help_topics_pkey",
+      "name": "auth_verifications_pkey",
       "schema": "public",
-      "table": "help_topics",
+      "table": "auth_verifications",
       "entityType": "pks"
     },
     {
       "columns": [
-        "organization_id"
+        "catalog_application_service_id"
       ],
       "nameExplicit": false,
-      "name": "organizations_pkey",
+      "name": "catalog_application_services_pkey",
       "schema": "public",
-      "table": "organizations",
+      "table": "catalog_application_services",
       "entityType": "pks"
     },
     {
       "columns": [
-        "session_id"
+        "catalog_help_topic_id"
       ],
       "nameExplicit": false,
-      "name": "sessions_pkey",
+      "name": "catalog_help_topics_pkey",
       "schema": "public",
-      "table": "sessions",
+      "table": "catalog_help_topics",
       "entityType": "pks"
     },
     {
       "columns": [
-        "sub_department_id"
+        "org_departement_id"
       ],
       "nameExplicit": false,
-      "name": "sub_departments_pkey",
+      "name": "org_departements_pkey",
       "schema": "public",
-      "table": "sub_departments",
+      "table": "org_departements",
       "entityType": "pks"
     },
     {
       "columns": [
-        "sub_team_id"
+        "org_organization_id"
       ],
       "nameExplicit": false,
-      "name": "sub_teams_pkey",
+      "name": "org_organizations_pkey",
       "schema": "public",
-      "table": "sub_teams",
+      "table": "org_organizations",
       "entityType": "pks"
     },
     {
       "columns": [
-        "subfield_id"
+        "org_sub_department_id"
       ],
       "nameExplicit": false,
-      "name": "subfields_pkey",
+      "name": "org_sub_departments_pkey",
       "schema": "public",
-      "table": "subfieldsnnn",
+      "table": "org_sub_departments",
       "entityType": "pks"
     },
     {
       "columns": [
-        "team_leader_id"
+        "org_sub_team_id"
       ],
       "nameExplicit": false,
-      "name": "team_leaders_pkey",
+      "name": "org_sub_teams_pkey",
       "schema": "public",
-      "table": "team_leaders",
+      "table": "org_sub_teams",
       "entityType": "pks"
     },
     {
       "columns": [
-        "team_member_id"
+        "org_team_leader_id"
       ],
       "nameExplicit": false,
-      "name": "team_members_pkey",
+      "name": "org_team_leaders_pkey",
       "schema": "public",
-      "table": "team_members",
+      "table": "org_team_leaders",
       "entityType": "pks"
     },
     {
       "columns": [
-        "team_id"
+        "org_team_member_id"
       ],
       "nameExplicit": false,
-      "name": "teams_pkey",
+      "name": "org_team_members_pkey",
       "schema": "public",
-      "table": "teams",
+      "table": "org_team_members",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "org_team_id"
+      ],
+      "nameExplicit": false,
+      "name": "org_teams_pkey",
+      "schema": "public",
+      "table": "org_teams",
       "entityType": "pks"
     },
     {
@@ -2264,34 +2242,14 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "user_id"
-      ],
-      "nameExplicit": false,
-      "name": "users_pkey",
-      "schema": "public",
-      "table": "users",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "verification_id"
-      ],
-      "nameExplicit": false,
-      "name": "verifications_pkey",
-      "schema": "public",
-      "table": "verifications",
-      "entityType": "pks"
-    },
-    {
       "nameExplicit": false,
       "columns": [
         "token"
       ],
       "nullsNotDistinct": false,
-      "name": "sessions_token_key",
+      "name": "auth_sessions_token_key",
       "schema": "public",
-      "table": "sessions",
+      "table": "auth_sessions",
       "entityType": "uniques"
     },
     {
@@ -2300,13 +2258,13 @@
         "email"
       ],
       "nullsNotDistinct": false,
-      "name": "users_email_key",
+      "name": "auth_users_email_key",
       "schema": "public",
-      "table": "users",
+      "table": "auth_users",
       "entityType": "uniques"
     }
   ],
   "renames": [
-    "public.subfields->public.subfieldsnnn"
+    "public.tickets.titlex->public.tickets.title"
   ]
 }

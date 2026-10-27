@@ -2,109 +2,109 @@ import { defineRelations } from "drizzle-orm";
 import * as schema from "./schema";
 
 export const relations = defineRelations(schema, (r) => ({
-	accounts: {
-		user: r.one.users({
-			from: r.accounts.userId,
-			to: r.users.userId
+	authAccounts: {
+		authUser: r.one.authUsers({
+			from: r.authAccounts.authUserId,
+			to: r.authUsers.authUserId
 		}),
 	},
-	users: {
-		accounts: r.many.accounts(),
-		organizations: r.many.organizations(),
-		sessions: r.many.sessions(),
-		departements: r.many.departements(),
-		teams: r.many.teams(),
-		teamMembers: r.many.teamMembers(),
-	},
-	applicationServices: {
-		subDepartment: r.one.subDepartments({
-			from: r.applicationServices.subDepartmentId,
-			to: r.subDepartments.subDepartmentId
+	authUsers: {
+		authAccounts: r.many.authAccounts(),
+		authSessions: r.many.authSessions(),
+		orgOrganizations: r.many.orgOrganizations({
+			from: r.authUsers.authUserId.through(r.orgDepartements.authUserId),
+			to: r.orgOrganizations.orgOrganizationId.through(r.orgDepartements.orgOrganizationId)
 		}),
-		helpTopics: r.many.helpTopics(),
+		orgDepartements: r.many.orgDepartements({
+			from: r.authUsers.authUserId.through(r.orgSubDepartments.authUserId),
+			to: r.orgDepartements.orgDepartementId.through(r.orgSubDepartments.orgDepartementId)
+		}),
+		orgTeams: r.many.orgTeams({
+			from: r.authUsers.authUserId.through(r.orgTeamLeaders.authUserId),
+			to: r.orgTeams.orgTeamId.through(r.orgTeamLeaders.orgTeamId)
+		}),
+		orgTeamMembers: r.many.orgTeamMembers(),
 	},
-	subDepartments: {
-		applicationServices: r.many.applicationServices(),
-		teams: r.many.teams(),
-	},
-	organizations: {
-		users: r.many.users({
-			from: r.organizations.organizationId.through(r.departements.organizationId),
-			to: r.users.userId.through(r.departements.userId)
+	authSessions: {
+		authUser: r.one.authUsers({
+			from: r.authSessions.authUserId,
+			to: r.authUsers.authUserId
 		}),
 	},
-	helpTopics: {
-		applicationService: r.one.applicationServices({
-			from: r.helpTopics.applicationServiceId,
-			to: r.applicationServices.applicationServiceId
+	catalogApplicationServices: {
+		orgSubDepartment: r.one.orgSubDepartments({
+			from: r.catalogApplicationServices.orgSubDepartmentId,
+			to: r.orgSubDepartments.orgSubDepartmentId
 		}),
-		teamMembers: r.many.teamMembers({
-			from: r.helpTopics.helpTopicId.through(r.tickets.helpTopicId),
-			to: r.teamMembers.teamMemberId.through(r.tickets.requesterMemberId)
+		catalogHelpTopics: r.many.catalogHelpTopics(),
+	},
+	orgSubDepartments: {
+		catalogApplicationServices: r.many.catalogApplicationServices(),
+		orgTeams: r.many.orgTeams(),
+	},
+	catalogHelpTopics: {
+		catalogApplicationService: r.one.catalogApplicationServices({
+			from: r.catalogHelpTopics.catalogApplicationServiceId,
+			to: r.catalogApplicationServices.catalogApplicationServiceId
+		}),
+		orgTeamMembers: r.many.orgTeamMembers({
+			from: r.catalogHelpTopics.catalogHelpTopicId.through(r.tickets.catalogHelpTopicId),
+			to: r.orgTeamMembers.orgTeamMemberId.through(r.tickets.orgTeamMemberId)
 		}),
 	},
-	sessions: {
-		user: r.one.users({
-			from: r.sessions.userId,
-			to: r.users.userId
+	orgOrganizations: {
+		authUsers: r.many.authUsers(),
+	},
+	orgDepartements: {
+		authUsers: r.many.authUsers(),
+	},
+	orgSubTeams: {
+		orgTeam: r.one.orgTeams({
+			from: r.orgSubTeams.orgTeamId,
+			to: r.orgTeams.orgTeamId
+		}),
+		orgTeamMembers: r.many.orgTeamMembers(),
+	},
+	orgTeams: {
+		orgSubTeams: r.many.orgSubTeams(),
+		authUsers: r.many.authUsers(),
+		orgTeamMembers: r.many.orgTeamMembers(),
+		orgSubDepartment: r.one.orgSubDepartments({
+			from: r.orgTeams.orgSubDepartmentId,
+			to: r.orgSubDepartments.orgSubDepartmentId
 		}),
 	},
-	departements: {
-		users: r.many.users({
-			from: r.departements.departementId.through(r.subDepartments.departementId),
-			to: r.users.userId.through(r.subDepartments.userId)
+	orgTeamMembers: {
+		authUser: r.one.authUsers({
+			from: r.orgTeamMembers.authUserId,
+			to: r.authUsers.authUserId
 		}),
-	},
-	subTeams: {
-		team: r.one.teams({
-			from: r.subTeams.teamId,
-			to: r.teams.teamId
+		orgSubTeam: r.one.orgSubTeams({
+			from: r.orgTeamMembers.orgSubTeamId,
+			to: r.orgSubTeams.orgSubTeamId
 		}),
-		teamMembers: r.many.teamMembers(),
-	},
-	teams: {
-		subTeams: r.many.subTeams(),
-		users: r.many.users({
-			from: r.teams.teamId.through(r.teamLeaders.teamId),
-			to: r.users.userId.through(r.teamLeaders.userId)
-		}),
-		teamMembers: r.many.teamMembers(),
-		subDepartment: r.one.subDepartments({
-			from: r.teams.subDepartmentId,
-			to: r.subDepartments.subDepartmentId
-		}),
-	},
-	teamMembers: {
-		subTeam: r.one.subTeams({
-			from: r.teamMembers.subTeamId,
-			to: r.subTeams.subTeamId
-		}),
-		team: r.one.teams({
-			from: r.teamMembers.teamId,
-			to: r.teams.teamId
-		}),
-		user: r.one.users({
-			from: r.teamMembers.userId,
-			to: r.users.userId
+		orgTeam: r.one.orgTeams({
+			from: r.orgTeamMembers.orgTeamId,
+			to: r.orgTeams.orgTeamId
 		}),
 		ticketsViaTicketAssignments: r.many.tickets({
-			alias: "tickets_ticketId_teamMembers_teamMemberId_via_ticketAssignments"
+			from: r.orgTeamMembers.orgTeamMemberId.through(r.ticketAssignments.assigneeMemberId),
+			to: r.tickets.ticketId.through(r.ticketAssignments.ticketId),
+			alias: "orgTeamMembers_orgTeamMemberId_tickets_ticketId_via_ticketAssignments"
 		}),
 		ticketsViaTicketChats: r.many.tickets({
-			from: r.teamMembers.teamMemberId.through(r.ticketChats.teamMemberId),
+			from: r.orgTeamMembers.orgTeamMemberId.through(r.ticketChats.orgTeamMemberId),
 			to: r.tickets.ticketId.through(r.ticketChats.ticketId),
-			alias: "teamMembers_teamMemberId_tickets_ticketId_via_ticketChats"
+			alias: "orgTeamMembers_orgTeamMemberId_tickets_ticketId_via_ticketChats"
 		}),
-		helpTopics: r.many.helpTopics(),
+		catalogHelpTopics: r.many.catalogHelpTopics(),
 	},
 	tickets: {
-		teamMembersViaTicketAssignments: r.many.teamMembers({
-			from: r.tickets.ticketId.through(r.ticketAssignments.ticketId),
-			to: r.teamMembers.teamMemberId.through(r.ticketAssignments.assigneeMemberId),
-			alias: "tickets_ticketId_teamMembers_teamMemberId_via_ticketAssignments"
+		orgTeamMembersViaTicketAssignments: r.many.orgTeamMembers({
+			alias: "orgTeamMembers_orgTeamMemberId_tickets_ticketId_via_ticketAssignments"
 		}),
-		teamMembersViaTicketChats: r.many.teamMembers({
-			alias: "teamMembers_teamMemberId_tickets_ticketId_via_ticketChats"
+		orgTeamMembersViaTicketChats: r.many.orgTeamMembers({
+			alias: "orgTeamMembers_orgTeamMemberId_tickets_ticketId_via_ticketChats"
 		}),
 	},
 	ticketChatAttachments: {

@@ -1,0 +1,1 @@
+ALTER TABLE "tickets" RENAME COLUMN "title" TO "titlex";
